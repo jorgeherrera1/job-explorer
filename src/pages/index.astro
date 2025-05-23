@@ -4,12 +4,19 @@ import Header from '../components/Header.astro';
 import SearchFilterBar from '../components/SearchFilterBar.astro';
 import MainJobExplorerContainer from '../components/MainJobExplorerContainer.astro';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import { getCollection } from 'astro:content';
+const jobEntries = await getCollection('jobs');
+
+// Pre-calculate filter options for better performance
+const guilds = [...new Set(jobEntries.map(entry => entry.data.guild))];
+const mainSkills = [...new Set(jobEntries.map(entry => entry.data.mainSkill))];
+const levels = [...new Set(jobEntries.map(entry => entry.data.level))];
+
 ---
 
 <Layout>
 	<Header />
-	<SearchFilterBar />
+	<SearchFilterBar guilds={guilds} mainSkills={mainSkills} levels={levels} />
 	<MainJobExplorerContainer />
 </Layout>
+

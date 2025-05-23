@@ -9,6 +9,9 @@ const XMarkIcon = ({ className }: { className?: string }) => (
 );
 
 interface SearchFilterControlsProps {
+  guilds?: string[];
+  mainSkills?: string[];
+  levels?: string[];
   onSearchChange?: (searchTerm: string) => void;
   onGuildChange?: (guilds: string[]) => void;
   onMainSkillChange?: (mainSkills: string[]) => void;
@@ -16,40 +19,10 @@ interface SearchFilterControlsProps {
   initialSearch?: string;
 }
 
-const guildOptions = [
-  'Agility',
-  'Backend Engineering',
-  'Cloud & Security',
-  'Data and AI',
-  'Digital Experience',
-  'Enterprise Solutions',
-  'Gaming',
-  'Product Engineering'
-];
-
-const mainSkillOptions = [
-  'Mobile Android Developer',
-  'Mobile iOS Developer', 
-  'Frontend Developer',
-  'Backend Developer',
-  'Full Stack Developer',
-  'Data Scientist',
-  'DevOps Engineer'
-];
-
-const levelOptions = [
-  'Intern (F)',
-  'Trainee (E)',
-  'Associate (D)',
-  'Associate II (C)',
-  'Intermediate (B)',
-  'Intermediate II (A)',
-  'Senior (1)',
-  'Senior II (2)',
-  'Principal (3)'
-];
-
 const SearchFilterControls: React.FC<SearchFilterControlsProps> = ({
+  guilds = [],
+  mainSkills = [],
+  levels = [],
   onSearchChange,
   onGuildChange,
   onMainSkillChange,
@@ -102,7 +75,7 @@ const SearchFilterControls: React.FC<SearchFilterControlsProps> = ({
       <div className="lg:col-span-1">
         <Dropdown
           label="Guilds"
-          options={guildOptions}
+          options={guilds}
           onSelectionChange={onGuildChange}
           placeholder="All Guilds"
         />
@@ -115,7 +88,7 @@ const SearchFilterControls: React.FC<SearchFilterControlsProps> = ({
       <div className="lg:col-span-1">
         <Dropdown
           label="Main Skills"
-          options={mainSkillOptions}
+          options={mainSkills}
           onSelectionChange={onMainSkillChange}
           placeholder="All Skills"
         />
@@ -128,7 +101,7 @@ const SearchFilterControls: React.FC<SearchFilterControlsProps> = ({
       <div className="lg:col-span-1">
         <Dropdown
           label="Level"
-          options={levelOptions}
+          options={levels}
           onSelectionChange={onLevelChange}
           placeholder="All Levels"
         />
