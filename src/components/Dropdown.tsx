@@ -10,19 +10,18 @@ const ChevronDownIcon = ({ className }: { className?: string }) => (
 interface DropdownProps {
   label: string;
   options: string[];
-  currentValue?: string;
-  onChange: (value: string) => void;
+  onSelectionChange?: (selected: string[]) => void;
   placeholder?: string;
 }
 
 const Dropdown: React.FC<DropdownProps> = ({ 
   label, 
   options, 
-  currentValue, 
-  onChange, 
-  placeholder 
+  onSelectionChange,
+  placeholder
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -36,8 +35,33 @@ const Dropdown: React.FC<DropdownProps> = ({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const displayValue = currentValue || placeholder || `Select ${label}`;
-  const hasValue = Boolean(currentValue);
+  const handleOptionToggle = (option: string, event: React.MouseEvent) => {
+    event.stopPropagation();
+    
+    const isSelected = selectedOptions.includes(option);
+    let newSelection: string[];
+    
+    if (isSelected) {
+      newSelection = selectedOptions.filter(item => item !== option);
+    } else {
+      newSelection = [...selectedOptions, option];
+    }
+    
+    setSelectedOptions(newSelection);
+    onSelectionChange?.(newSelection);
+  };
+
+  const handleClearAll = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setSelectedOptions([]);
+    onSelectionChange?.([]);
+  };
+
+  const displayValue = selectedOptions.length > 0 
+    ? `${selectedOptions.length} ${selectedOptions.length === 1 ? 'Element' : 'Elements'}`
+    : placeholder || `Select ${label}`;
+  
+  const hasValue = selectedOptions.length > 0;
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -66,25 +90,51 @@ const Dropdown: React.FC<DropdownProps> = ({
       </button>
 
       {isOpen && (
-        <div className="absolute z-50 w-full mt-2 bg-white border border-gray-300 rounded-lg shadow-lg max-h-64 overflow-auto">
-          <div className="py-2">
-            {options.map((option) => (
-              <button
-                key={option}
-                type="button"
-                className={`w-full px-4 py-3 text-left text-sm hover:bg-indigo-50 focus:outline-none focus:bg-indigo-50 transition-colors duration-150 ${
-                  currentValue === option 
-                    ? 'bg-indigo-50 text-indigo-700 font-medium' 
-                    : 'text-gray-900'
-                }`}
-                onClick={() => {
-                  onChange(option);
-                  setIsOpen(false);
-                }}
-              >
-                {option}
-              </button>
-            ))}
+        <div className="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg min-w-max">
+          <div className="p-4">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-600">
+                  You can select one or more {label.toLowerCase()}
+                </span>
+              </div>
+              <div className="flex items-center gap-4">
+                <span className="text-sm text-gray-600">
+                  ({selectedOptions.length}) Selected
+                </span>
+                {selectedOptions.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={handleClearAll}
+                    className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                  >
+                    Clear All
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Pills Grid */}
+            <div className="grid grid-cols-2 gap-2 max-w-md">
+              {options.map((option) => {
+                const isSelected = selectedOptions.includes(option);
+                return (
+                  <button
+                    key={option}
+                    type="button"
+                    onClick={(event) => handleOptionToggle(option, event)}
+                    className={`px-4 py-2 text-sm rounded-full border transition-all duration-150 text-left ${
+                      isSelected
+                        ? 'bg-indigo-50 border-indigo-200 text-indigo-700 font-medium'
+                        : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    {option}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       )}

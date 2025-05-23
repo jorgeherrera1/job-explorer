@@ -11,13 +11,9 @@ import SearchFilterControls from './SearchFilterControls.tsx';
       <SearchFilterControls 
         client:load
         onSearchChange={(searchTerm: string) => console.log('Search changed:', searchTerm)}
-        onGuildChange={(guild: string) => console.log('Guild changed:', guild)}
-        onMainSkillChange={(mainSkill: string) => console.log('Main skill changed:', mainSkill)}
-        onLevelChange={(level: string) => console.log('Level changed:', level)}
-        currentSearch=""
-        currentGuild=""
-        currentMainSkill=""
-        currentLevel=""
+        onGuildChange={(guilds: string[]) => console.log('Guilds changed:', guilds)}
+        onMainSkillChange={(mainSkills: string[]) => console.log('Main skills changed:', mainSkills)}
+        onLevelChange={(levels: string[]) => console.log('Levels changed:', levels)}
       />
     </div>
   </div>

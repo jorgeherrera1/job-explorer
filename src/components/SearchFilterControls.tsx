@@ -9,21 +9,22 @@ const XMarkIcon = ({ className }: { className?: string }) => (
 );
 
 interface SearchFilterControlsProps {
-  onSearchChange: (searchTerm: string) => void;
-  onGuildChange: (guild: string) => void;
-  onMainSkillChange: (mainSkill: string) => void;
-  onLevelChange: (level: string) => void;
-  currentSearch?: string;
-  currentGuild?: string;
-  currentMainSkill?: string;
-  currentLevel?: string;
+  onSearchChange?: (searchTerm: string) => void;
+  onGuildChange?: (guilds: string[]) => void;
+  onMainSkillChange?: (mainSkills: string[]) => void;
+  onLevelChange?: (levels: string[]) => void;
+  initialSearch?: string;
 }
 
 const guildOptions = [
+  'Agility',
+  'Backend Engineering',
+  'Cloud & Security',
+  'Data and AI',
   'Digital Experience',
-  'Data & Analytics', 
-  'Cloud Infrastructure',
-  'Software Engineering'
+  'Enterprise Solutions',
+  'Gaming',
+  'Product Engineering'
 ];
 
 const mainSkillOptions = [
@@ -53,22 +54,19 @@ const SearchFilterControls: React.FC<SearchFilterControlsProps> = ({
   onGuildChange,
   onMainSkillChange,
   onLevelChange,
-  currentSearch = '',
-  currentGuild = '',
-  currentMainSkill = '',
-  currentLevel = ''
+  initialSearch = ''
 }) => {
-  const [searchTerm, setSearchTerm] = useState(currentSearch);
+  const [searchTerm, setSearchTerm] = useState(initialSearch);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setSearchTerm(value);
-    onSearchChange(value);
+    onSearchChange?.(value);
   };
 
   const clearSearch = () => {
     setSearchTerm('');
-    onSearchChange('');
+    onSearchChange?.('');
   };
 
   return (
@@ -110,8 +108,7 @@ const SearchFilterControls: React.FC<SearchFilterControlsProps> = ({
         <Dropdown
           label="Guilds"
           options={guildOptions}
-          currentValue={currentGuild}
-          onChange={onGuildChange}
+          onSelectionChange={onGuildChange}
           placeholder="All Guilds"
         />
       </div>
@@ -124,8 +121,7 @@ const SearchFilterControls: React.FC<SearchFilterControlsProps> = ({
         <Dropdown
           label="Main Skills"
           options={mainSkillOptions}
-          currentValue={currentMainSkill}
-          onChange={onMainSkillChange}
+          onSelectionChange={onMainSkillChange}
           placeholder="All Skills"
         />
       </div>
@@ -138,8 +134,7 @@ const SearchFilterControls: React.FC<SearchFilterControlsProps> = ({
         <Dropdown
           label="Level"
           options={levelOptions}
-          currentValue={currentLevel}
-          onChange={onLevelChange}
+          onSelectionChange={onLevelChange}
           placeholder="All Levels"
         />
       </div>
