@@ -1,0 +1,24 @@
+---
+// SearchFilterBar.astro - Main floating container component for search and filter controls
+import SearchFilterControls from './SearchFilterControls.tsx';
+---
+
+<div id="search-filter-bar" class="relative z-40">
+  <!-- Floating Search & Filter Container -->
+  <div class="absolute left-0 right-0 -mt-8 mx-auto max-w-7xl px-6 lg:px-8">
+    <div class="bg-white rounded-full shadow-xl px-8 py-4">
+      <!-- React Component with proper Astro integration -->
+      <SearchFilterControls 
+        client:load
+        onSearchChange={(searchTerm: string) => console.log('Search changed:', searchTerm)}
+        onGuildChange={(guild: string) => console.log('Guild changed:', guild)}
+        onMainSkillChange={(mainSkill: string) => console.log('Main skill changed:', mainSkill)}
+        onLevelChange={(level: string) => console.log('Level changed:', level)}
+        currentSearch=""
+        currentGuild=""
+        currentMainSkill=""
+        currentLevel=""
+      />
+    </div>
+  </div>
+</div> 
