@@ -78,12 +78,7 @@ const SearchFilterControls: React.FC<SearchFilterControlsProps> = ({
             type="text"
             value={searchTerm}
             onChange={handleSearchChange}
-            className="w-full bg-transparent placeholder-gray-500 focus:outline-none text-lg leading-tight appearance-none"
-            style={{ 
-              boxSizing: 'border-box',
-              minHeight: '48px',
-              lineHeight: '1.25'
-            }}
+            className="w-full bg-transparent placeholder-gray-500 focus:outline-none text-lg leading-5 appearance-none box-border min-h-[48px]"
             placeholder="Search jobs..."
             aria-label="Search jobs"
           />
