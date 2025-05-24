@@ -1,4 +1,5 @@
 import { defineCollection, z } from 'astro:content';
+import { groupJobsByValidRootId } from './utils/jobTransforms';
 
 const jobsCollection = defineCollection({
     schema: z.object({
@@ -6,27 +7,35 @@ const jobsCollection = defineCollection({
       mainSkill: z.string(),
       level: z.string(),
       guild: z.string(),
-      country: z.string(),
-      jobCode: z.string(),
       validJobRootId: z.number(),
-    },),
+      jobCodes: z.record(z.string(), z.string()), // Country name as key, job code as value
+    }),
     loader: async () => {
-        // Fetch data from API
-        const response = await fetch('https://job-arch-app-service-2.azurewebsites.net/api/ViewValidJobs');
-        const data = await response.json();
-        
-        // Transform and optimize data
-        return data.map((job: any, index: number) => ({
-            id: `job-${index}`,
-            jobTitle: job.jobTitle,
-            mainSkill: job.mainSkill,
-            level: job.level,
-            guild: job.guild,
-            country: job.country,
-            jobCode: job.jobCode,
-            validJobRootId: job.validJobRootId
-        }));
-      }
-  });
+        try {
+            console.log('🔄 Starting jobs collection loader...');
+            
+            // Fetch data from the jobs API
+            const response = await fetch('https://job-arch-app-service-2.azurewebsites.net/api/ViewValidJobs');
+            
+            console.log('📡 API Response status:', response.status);
+            
+            if (!response.ok) {
+                throw new Error(`Failed to fetch jobs data: ${response.status} ${response.statusText}`);
+            }
+            
+            const data = await response.json();
+            console.log('📦 Raw data received:', Array.isArray(data) ? `${data.length} items` : 'Not an array');
+            
+            const jobs = await groupJobsByValidRootId(data);
+            console.log('🔧 Total # of jobs:', jobs.length);
+            console.log('🔍 First job sample:', jobs[0]);
+            
+            return jobs;
+        } catch (error) {
+            console.error('❌ Error in jobs loader:', error);
+            throw error;
+        }
+    }
+});
 
 export const collections = { jobs: jobsCollection };
