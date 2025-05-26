@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-// Custom SVG Icon
 const ChevronDownIcon = ({ className }: { className?: string }) => (
   <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
     <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
@@ -10,18 +9,12 @@ const ChevronDownIcon = ({ className }: { className?: string }) => (
 interface DropdownProps {
   label: string;
   options: string[];
-  onSelectionChange?: (selected: string[]) => void;
   placeholder?: string;
 }
 
-const Dropdown: React.FC<DropdownProps> = ({ 
-  label, 
-  options, 
-  onSelectionChange,
-  placeholder
-}) => {
+const Dropdown: React.FC<DropdownProps> = ({ label, options, placeholder }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+  const [selected, setSelected] = useState<string[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -30,84 +23,50 @@ const Dropdown: React.FC<DropdownProps> = ({
         setIsOpen(false);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const handleOptionToggle = (option: string, event: React.MouseEvent) => {
-    event.stopPropagation();
-    
-    const isSelected = selectedOptions.includes(option);
-    let newSelection: string[];
-    
-    if (isSelected) {
-      newSelection = selectedOptions.filter(item => item !== option);
-    } else {
-      newSelection = [...selectedOptions, option];
-    }
-    
-    setSelectedOptions(newSelection);
-    onSelectionChange?.(newSelection);
+  const toggleOption = (option: string) => {
+    setSelected(prev => 
+      prev.includes(option) 
+        ? prev.filter(item => item !== option)
+        : [...prev, option]
+    );
   };
 
-  const handleClearAll = (event: React.MouseEvent) => {
-    event.stopPropagation();
-    setSelectedOptions([]);
-    onSelectionChange?.([]);
-  };
-
-  const displayValue = selectedOptions.length > 0 
-    ? `${selectedOptions.length} ${selectedOptions.length === 1 ? 'Element' : 'Elements'}`
+  const displayValue = selected.length > 0 
+    ? `${selected.length} Selected`
     : placeholder || `Select ${label}`;
-  
-  const hasValue = selectedOptions.length > 0;
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div class="relative" ref={dropdownRef}>
       <button
-        type="button"
-        className="flex items-center justify-between w-full px-4 py-2 text-left bg-transparent hover:bg-gray-50 focus:outline-none transition-all duration-200"
         onClick={() => setIsOpen(!isOpen)}
-        aria-haspopup="listbox"
-        aria-expanded={isOpen}
+        class="flex items-center justify-between w-full h-12 text-left hover:bg-gray-50 focus:outline-none"
       >
-        <div className="flex flex-col min-w-0 flex-1">
-          <span className="text-xs font-semibold text-gray-700 uppercase tracking-wider leading-tight">
+        <div class="flex flex-col min-w-0 flex-1">
+          <span class="text-xs font-semibold text-gray-700 uppercase tracking-wider">
             {label}
           </span>
-          <span className={`text-sm truncate leading-tight ${
-            hasValue ? 'text-gray-900 font-medium' : 'text-gray-500'
-          }`}>
+          <span class={`text-sm truncate ${selected.length > 0 ? 'text-gray-900 font-medium' : 'text-gray-500'}`}>
             {displayValue}
           </span>
         </div>
-        <ChevronDownIcon 
-          className={`h-4 w-4 text-gray-500 transition-transform duration-200 ml-2 ${
-            isOpen ? 'rotate-180' : ''
-          }`} 
-        />
+        <ChevronDownIcon className={`h-4 w-4 text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
       {isOpen && (
-        <div className="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-lg shadow-lg min-w-max">
-          <div className="p-4">
-            {/* Header */}
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-gray-600">
-                  You can select one or more {label.toLowerCase()}
-                </span>
-              </div>
-              <div className="flex items-center gap-4">
-                <span className="text-sm text-gray-600">
-                  ({selectedOptions.length}) Selected
-                </span>
-                {selectedOptions.length > 0 && (
+        <div class="absolute z-50 w-72 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg">
+          <div class="p-4">
+            <div class="flex items-center justify-between mb-4">
+              <span class="text-sm text-gray-600">Select one or more {label.toLowerCase()}</span>
+              <div class="flex items-center gap-4">
+                <span class="text-sm text-gray-600">({selected.length}) Selected</span>
+                {selected.length > 0 && (
                   <button
-                    type="button"
-                    onClick={handleClearAll}
-                    className="text-sm text-blue-600 hover:text-blue-800 font-medium"
+                    onClick={() => setSelected([])}
+                    class="text-sm text-blue-600 hover:text-blue-800 font-medium"
                   >
                     Clear All
                   </button>
@@ -115,25 +74,20 @@ const Dropdown: React.FC<DropdownProps> = ({
               </div>
             </div>
 
-            {/* Pills Grid */}
-            <div className="grid grid-cols-2 gap-2 max-w-md">
-              {options.map((option) => {
-                const isSelected = selectedOptions.includes(option);
-                return (
-                  <button
-                    key={option}
-                    type="button"
-                    onClick={(event) => handleOptionToggle(option, event)}
-                    className={`px-4 py-2 text-sm rounded-full border transition-all duration-150 text-left ${
-                      isSelected
-                        ? 'bg-indigo-50 border-indigo-200 text-indigo-700 font-medium'
-                        : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100'
-                    }`}
-                  >
-                    {option}
-                  </button>
-                );
-              })}
+            <div class="grid grid-cols-2 gap-2">
+              {options.map(option => (
+                <button
+                  key={option}
+                  onClick={() => toggleOption(option)}
+                  class={`px-4 py-2 text-sm rounded-full border text-left transition-colors ${
+                    selected.includes(option)
+                      ? 'bg-indigo-50 border-indigo-200 text-indigo-700 font-medium'
+                      : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100'
+                  }`}
+                >
+                  {option}
+                </button>
+              ))}
             </div>
           </div>
         </div>
@@ -142,4 +96,4 @@ const Dropdown: React.FC<DropdownProps> = ({
   );
 };
 
-export default Dropdown; 
+export default Dropdown;

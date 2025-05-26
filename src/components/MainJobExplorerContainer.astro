@@ -1,19 +1,12 @@
 ---
-// MainJobExplorerContainer.astro - Static container for the job explorer
 import GradientHeader from './GradientHeader.tsx';
 ---
 
-<div class="w-full pt-16 h-[calc(100vh-140px)]">
-  <!-- Main Container - Takes remaining viewport height -->
-  <div class="max-w-7xl mx-auto px-6 lg:px-8 h-full">
-    <div class="bg-white rounded-4xl shadow-xl overflow-hidden h-full flex flex-col">
-      <!-- Gradient Header Section (React Component for future interactivity) -->
-      <GradientHeader client:load />
-      
-      <!-- Content Area -->
-      <div class="bg-gray-50 flex-1 relative">
-        <!-- Empty for now - will add job results later -->
-      </div>
+<main class="pt-16 h-[calc(100vh-140px)] max-w-7xl mx-auto px-6">
+  <div class="bg-white rounded-4xl shadow-xl h-full overflow-hidden flex flex-col">
+    <GradientHeader client:load />
+    <div class="bg-gray-50 flex-1">
+      <!-- Job results will go here -->
     </div>
   </div>
-</div> 
+</main>
