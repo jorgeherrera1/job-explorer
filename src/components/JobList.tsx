@@ -15,7 +15,7 @@ const JobList: React.FC<JobListProps> = ({ jobs }) => {
   return (
     <>
       {jobs.map((job) => {
-        const { id, jobTitle, level } = job.data;
+        const { id, jobTitle, level } = job;
         return (
         <div
           key={id}

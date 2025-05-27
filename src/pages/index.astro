@@ -1,22 +1,47 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Header from '../components/Header.astro';
-import SearchFilterBar from '../components/SearchFilterBar.astro';
-import MainJobExplorerContainer from '../components/MainJobExplorerContainer.astro';
+import SearchFilterControls from '../components/SearchFilterControls.tsx';
+import JobList from '../components/JobList.tsx';
 
 import { getCollection } from 'astro:content';
 const jobEntries = await getCollection('jobs');
 
+// Transform collection entries to Job type
+const jobs = jobEntries.map(entry => ({
+	id: entry.id,
+	...entry.data
+}));
+
 // Pre-calculate filter options for better performance
-const guilds = [...new Set(jobEntries.map(entry => entry.data.guild))];
-const mainSkills = [...new Set(jobEntries.map(entry => entry.data.mainSkill))];
-const levels = [...new Set(jobEntries.map(entry => entry.data.level))];
+const guilds = [...new Set(jobs.map(job => job.guild))];
+const mainSkills = [...new Set(jobs.map(job => job.mainSkill))];
+const levels = [...new Set(jobs.map(job => job.level))];
 
 ---
 
 <Layout>
-	<Header />
-	<SearchFilterBar guilds={guilds} mainSkills={mainSkills} levels={levels} />
-	<MainJobExplorerContainer jobs={jobEntries} />
+	<SearchFilterControls 
+		slot="search-controls"
+		client:load
+		guilds={guilds}
+		mainSkills={mainSkills}
+		levels={levels}
+	/>
+	
+	<!-- Filter tags slot is empty for now - will be populated later -->
+	<div slot="filter-tags">
+		<!-- Future content: filter tags with remove buttons, results counter, clear all filters button -->
+	</div>
+	
+	<JobList 
+		slot="job-list"
+		client:load 
+		jobs={jobs} 
+	/>
+	
+	<!-- Job details slot placeholder -->
+	<div slot="job-details" class="p-6 flex items-center justify-center text-gray-500">
+		Select a job to view details
+	</div>
 </Layout>
 

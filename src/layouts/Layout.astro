@@ -1,6 +1,7 @@
 ---
-// Layout.astro - Main layout component
+// Layout.astro - Main layout component with all visual structure
 import '../styles/global.css';
+import Header from '../components/Header.astro';
 ---
 
 <!doctype html>
@@ -13,7 +14,42 @@ import '../styles/global.css';
 		<title>Job Explorer</title>
 	</head>
 	<body>
-		<slot />
+		<!-- Fixed Header -->
+		<Header />
+		
+		<!-- Search Controls Container - Floating white rounded container -->
+		<div class="relative z-40 -mt-4 max-w-7xl mx-auto px-6">
+			<div class="bg-white rounded-full shadow-xl px-8 py-4">
+				<slot name="search-controls" />
+			</div>
+		</div>
+		
+		<!-- Main Grid Structure -->
+		<main class="w-full pt-8 pb-8 h-[calc(100vh-172px)]">
+			<div class="max-w-7xl mx-auto px-6 lg:px-8 h-full">
+				<div class="bg-white rounded-4xl shadow-xl overflow-hidden h-full grid grid-rows-[auto_1fr]">
+					<!-- Row 1: Gradient header for filter tags/results count -->
+					<div class="bg-gradient-to-r from-indigo-900 via-blue-800 to-teal-500 h-16 relative flex items-center">
+						<slot name="filter-tags" />
+					</div>
+					
+					<!-- Row 2: Two-column layout (job list | job details) -->
+					<div class="grid grid-cols-[1fr_2fr] overflow-hidden">
+						<!-- Column 1: Job List -->
+						<div class="border-r border-gray-200 overflow-hidden flex flex-col">
+							<div class="overflow-y-auto flex-1">
+								<slot name="job-list" />
+							</div>
+						</div>
+						
+						<!-- Column 2: Job Details -->
+						<div class="overflow-hidden flex flex-col">
+							<slot name="job-details" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
 	</body>
 </html>
 
