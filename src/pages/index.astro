@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import SearchFilterControls from '../components/SearchFilterControls.tsx';
+import FilterTags from '../components/FilterTags.tsx';
 import JobList from '../components/JobList.tsx';
 
 import { getCollection } from 'astro:content';
@@ -17,6 +18,16 @@ const guilds = [...new Set(jobs.map(job => job.guild))];
 const mainSkills = [...new Set(jobs.map(job => job.mainSkill))];
 const levels = [...new Set(jobs.map(job => job.level))];
 
+// Mock data for FilterTags demonstration
+const mockActiveFilters = {
+	guilds: ["Data and AI"],
+	mainSkills: ["AI Engineer"],
+	levels: ["2-Senior"],
+	search: undefined
+};
+
+const mockResultsCount = 24;
+
 ---
 
 <Layout>
@@ -28,10 +39,12 @@ const levels = [...new Set(jobs.map(job => job.level))];
 		levels={levels}
 	/>
 	
-	<!-- Filter tags slot is empty for now - will be populated later -->
-	<div slot="filter-tags">
-		<!-- Future content: filter tags with remove buttons, results counter, clear all filters button -->
-	</div>
+	<FilterTags 
+		slot="filter-tags"
+		client:load
+		activeFilters={mockActiveFilters}
+		resultsCount={mockResultsCount}
+	/>
 	
 	<JobList 
 		slot="job-list"

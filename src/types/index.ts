@@ -25,4 +25,23 @@ export interface JobFilters {
   mainSkill?: string;
   level?: string;
   search?: string;
+}
+
+/**
+ * Individual filter tag for display in FilterTags component
+ */
+export interface FilterTag {
+  type: 'guild' | 'mainSkill' | 'level' | 'search';
+  value: string;
+  label?: string; // Optional custom label for display
+}
+
+/**
+ * Active filters structure for FilterTags component
+ */
+export interface ActiveFilters {
+  guilds: string[];
+  mainSkills: string[];
+  levels: string[];
+  search?: string;
 } 
