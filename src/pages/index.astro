@@ -17,6 +17,6 @@ const levels = [...new Set(jobEntries.map(entry => entry.data.level))];
 <Layout>
 	<Header />
 	<SearchFilterBar guilds={guilds} mainSkills={mainSkills} levels={levels} />
-	<MainJobExplorerContainer />
+	<MainJobExplorerContainer jobs={jobEntries} />
 </Layout>
 
