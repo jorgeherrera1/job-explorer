@@ -1,15 +1,10 @@
 import React from 'react';
 import type { Job } from '../types';
+import ChevronIcon from './icons/ChevronIcon';
 
 interface JobListProps {
   jobs: Job[];
 }
-
-const ChevronRightIcon = ({ className }: { className?: string }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" />
-  </svg>
-);
 
 const JobList: React.FC<JobListProps> = ({ jobs }) => {
   return (
@@ -29,7 +24,7 @@ const JobList: React.FC<JobListProps> = ({ jobs }) => {
               <div className="bg-blue-100 text-blue-600 px-2 py-1 rounded-full text-xs font-semibold flex-shrink-0">
                 {level}
               </div>
-              <ChevronRightIcon className="h-5 w-5 text-gray-400 flex-shrink-0" />
+              <ChevronIcon direction="right" className="h-5 w-5 text-gray-400 flex-shrink-0" />
             </div>
           </div>
         </div>
