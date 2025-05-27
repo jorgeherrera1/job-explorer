@@ -6,7 +6,7 @@ import JobList from './JobList.tsx';
 const { jobs } = Astro.props;
 ---
 
-<main class="w-full pt-16 h-[calc(100vh-140px)]">
+<main class="w-full pt-8 pb-8 h-[calc(100vh-172px)]">
   <div class="max-w-7xl mx-auto px-6 lg:px-8 h-full">
     <div class="bg-white rounded-4xl shadow-xl overflow-hidden h-full grid grid-rows-[auto_1fr]">
       <!-- Row 1: Gradient Header -->
@@ -15,8 +15,10 @@ const { jobs } = Astro.props;
       <!-- Row 2: Two column layout -->
       <div class="grid grid-cols-[1fr_2fr] overflow-hidden">
         <!-- Column 1: Job List -->
-        <div class="border-r border-gray-200">
-          <JobList client:load jobs={jobs} />
+        <div class="border-r border-gray-200 overflow-hidden flex flex-col">
+          <div class="overflow-y-auto flex-1">
+            <JobList client:load jobs={jobs} />
+          </div>
         </div>
       </div>
     </div>
