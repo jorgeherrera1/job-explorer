@@ -1,6 +1,6 @@
 # Job Explorer
 
-A modern web application for exploring and filtering job opportunities, built with Astro, React, and TailwindCSS.
+A modern web application for exploring and filtering jobs, built with Astro, React, and TailwindCSS.
 
 ## 🎯 Features
 
@@ -82,6 +82,7 @@ The application fetches job data at build time from:
 ```
 https://job-arch-app-service-2.azurewebsites.net/api/ViewValidJobs
 ```
+
 
 Jobs are automatically grouped and processed during the build to provide filtering capabilities by:
 - Guild
