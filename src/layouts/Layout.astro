@@ -36,16 +36,21 @@ import { ClientRouter } from 'astro:transitions';
 					</div>
 					
 					<!-- Row 2: Two-column layout (job list | job details) -->
-					<div class="grid grid-cols-[1fr_2fr] overflow-hidden">
+					<div class="grid grid-cols-[1fr_2fr] h-full min-h-0">
 						<!-- Column 1: Job List -->
-						<div class="border-r border-gray-200 overflow-hidden flex flex-col">
-							<div class="overflow-y-auto flex-1">
+						<div class="border-r border-gray-200 flex flex-col h-full max-h-full min-h-0">
+							<!-- Job List Header -->
+							<div class="px-4 py-3 border-b border-gray-100">
+								<slot name="job-list-header" />
+							</div>
+							<!-- Job List Content -->
+							<div class="overflow-y-auto overflow-x-visible flex-1 px-1 min-h-0 max-h-full">
 								<slot name="job-list" />
 							</div>
 						</div>
 						
 						<!-- Column 2: Job Details -->
-						<div class="overflow-hidden flex flex-col">
+						<div class="overflow-hidden flex flex-col h-full min-h-0">
 							<slot name="job-details" />
 						</div>
 					</div>
