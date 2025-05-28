@@ -70,10 +70,14 @@ const regionalCodes = Object.entries(job.jobCodes).map(([country, code]) => ({
       </div>
       <div class="flex flex-wrap gap-2">
         {regionalCodes.map(({ country, code, flag }) => (
-          <div class="flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-lg border">
+          <button 
+            class="flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-lg border hover:bg-gray-100 transition-colors cursor-pointer regional-code-btn"
+            data-code={code}
+            title={`Click to copy ${code}`}
+          >
             <span class="text-lg">{flag}</span>
             <span class="text-sm font-medium text-gray-700">{code}</span>
-          </div>
+          </button>
         ))}
       </div>
     </div>
@@ -146,12 +150,27 @@ const regionalCodes = Object.entries(job.jobCodes).map(([country, code]) => ({
   </div>
 </div>
 
+<!-- Popover for copy confirmation -->
+<div id="copy-popover" class="fixed z-50 px-3 py-2 bg-black text-white text-sm rounded-lg shadow-lg opacity-0 pointer-events-none transition-opacity duration-200" style="transform: translate(-50%, -100%);">
+  <div class="flex items-center gap-2">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M5 13l4 4L19 7"></path>
+    </svg>
+    <span>Copied to clipboard!</span>
+  </div>
+  <!-- Arrow pointing down -->
+  <div class="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-black"></div>
+</div>
+
 <script>
   // Simple tab functionality
   document.addEventListener('DOMContentLoaded', () => {
     const tabButtons = document.querySelectorAll('.tab-button');
     const tabContents = document.querySelectorAll('.tab-content');
+    const regionalCodeButtons = document.querySelectorAll('.regional-code-btn');
+    const copyPopover = document.getElementById('copy-popover');
 
+    // Tab functionality
     tabButtons.forEach(button => {
       button.addEventListener('click', () => {
         const targetTab = button.getAttribute('data-tab');
@@ -178,5 +197,70 @@ const regionalCodes = Object.entries(job.jobCodes).map(([country, code]) => ({
         }
       });
     });
+
+    // Regional code copy functionality
+    regionalCodeButtons.forEach(button => {
+      button.addEventListener('click', async (event) => {
+        const target = event.target as HTMLElement;
+        const buttonElement = target?.closest('button') as HTMLButtonElement;
+        const code = buttonElement?.getAttribute('data-code');
+        
+        if (!code) return;
+        
+        try {
+          // Copy to clipboard
+          await navigator.clipboard.writeText(code);
+          
+          // Show popover
+          showCopyPopover(buttonElement);
+        } catch (err) {
+          console.error('Failed to copy to clipboard:', err);
+          // Fallback for older browsers
+          fallbackCopyToClipboard(code);
+          showCopyPopover(buttonElement);
+        }
+      });
+    });
+
+    // Function to show copy confirmation popover
+    function showCopyPopover(targetButton: HTMLButtonElement | null) {
+      if (!copyPopover || !targetButton) return;
+      
+      // Position the popover above the clicked button
+      const buttonRect = targetButton.getBoundingClientRect();
+      
+      copyPopover.style.left = `${buttonRect.left + buttonRect.width / 2}px`;
+      copyPopover.style.top = `${buttonRect.top - 10}px`;
+      
+      // Show popover
+      copyPopover.classList.remove('opacity-0');
+      copyPopover.classList.add('opacity-100');
+      
+      // Hide popover after 2 seconds
+      setTimeout(() => {
+        copyPopover.classList.remove('opacity-100');
+        copyPopover.classList.add('opacity-0');
+      }, 2000);
+    }
+
+    // Fallback copy function for older browsers
+    function fallbackCopyToClipboard(text: string) {
+      const textArea = document.createElement('textarea');
+      textArea.value = text;
+      textArea.style.position = 'fixed';
+      textArea.style.left = '-999999px';
+      textArea.style.top = '-999999px';
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      
+      try {
+        document.execCommand('copy');
+      } catch (err) {
+        console.error('Fallback copy failed:', err);
+      }
+      
+      document.body.removeChild(textArea);
+    }
   });
 </script> 
