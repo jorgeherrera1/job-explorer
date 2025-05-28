@@ -7,33 +7,24 @@ interface Props {
 
 const { job } = Astro.props;
 
-// Helper function to get country flags - updated to match mockup
+// Helper function to get country flags based on country names
 function getCountryFlag(country: string): string {
   const flagMap: Record<string, string> = {
-    'UANDFA': '🇺🇸', // USA
-    'UANDFB': '🇧🇷', // Brazil  
-    'UANDFC': '🇨🇦', // Canada
-    'UANDFM': '🇲🇽', // Mexico
-    'UANDFU': '🇺🇸', // USA
-    'BJVD1A': '🇺🇸', // USA
-    'BJVD1B': '🇧🇷', // Brazil
-    'BJVD1C': '🇨🇦', // Canada
-    'BJVD1M': '🇲🇽', // Mexico
-    'BJVD1U': '🇺🇸', // USA
-    'USA': '🇺🇸',
+    'Argentina': '🇦🇷',
     'Brazil': '🇧🇷',
-    'Canada': '🇨🇦',
-    'Mexico': '🇲🇽'
+    'Costa Rica': '🇨🇷',
+    'Mexico': '🇲🇽',
+    'USA': '🇺🇸'
   };
   
   return flagMap[country] || '🌍';
 }
 
-// Mock regional codes based on the job's jobCodes
+// Regional codes based on the job's jobCodes
 const regionalCodes = Object.entries(job.jobCodes).map(([country, code]) => ({
   country,
   code,
-  flag: getCountryFlag(code) // Use the job code to determine flag
+  flag: getCountryFlag(country) // Use the country name to determine flag
 }));
 ---
 
