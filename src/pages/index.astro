@@ -16,7 +16,8 @@ const jobs = jobEntries.map(entry => ({
 // Pre-calculate filter options for better performance
 const guilds = [...new Set(jobs.map(job => job.guild))];
 const mainSkills = [...new Set(jobs.map(job => job.mainSkill))];
-const levels = [...new Set(jobs.map(job => job.level))];
+// Create level options from the available job levels
+const levels = [...new Set(jobs.map(job => `${job.level.code}-${job.level.name}`))];
 
 // Mock data for FilterTags demonstration
 const mockActiveFilters = {

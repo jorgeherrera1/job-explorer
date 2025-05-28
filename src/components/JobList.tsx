@@ -22,7 +22,7 @@ const JobList: React.FC<JobListProps> = ({ jobs }) => {
             </div>
             <div className="flex items-center gap-2">
               <div className="bg-blue-100 text-blue-600 px-2 py-1 rounded-full text-xs font-semibold flex-shrink-0">
-                {level}
+                {level.code}-{level.name}
               </div>
               <ChevronIcon direction="right" className="h-5 w-5 text-gray-400 flex-shrink-0" />
             </div>

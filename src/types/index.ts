@@ -4,6 +4,15 @@
  */
 
 /**
+ * Job Level interface representing a level with its code and name
+ * This provides a structured way to handle level codes and their display names
+ */
+export interface JobLevel {
+  code: string;
+  name: string;
+}
+
+/**
  * Core Job interface representing a job position across multiple countries
  * This is the canonical job type used throughout the application
  */
@@ -11,7 +20,7 @@ export interface Job {
   id: string;
   jobTitle: string;
   mainSkill: string;
-  level: string;
+  level: JobLevel;
   guild: string;
   validJobRootId: number;
   jobCodes: Record<string, string>; // Country name -> Job code mapping

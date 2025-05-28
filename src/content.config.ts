@@ -5,7 +5,10 @@ const jobsCollection = defineCollection({
     schema: z.object({
       jobTitle: z.string(),
       mainSkill: z.string(),
-      level: z.string(),
+      level: z.object({
+        code: z.string(),
+        name: z.string()
+      }),
       guild: z.string(),
       validJobRootId: z.number(),
       jobCodes: z.record(z.string(), z.string()), // Country name as key, job code as value

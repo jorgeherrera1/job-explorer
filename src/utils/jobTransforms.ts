@@ -1,4 +1,34 @@
-import type { Job } from '../types';
+import type { Job, JobLevel } from '../types';
+
+/**
+ * Level code to name mapping
+ */
+const LEVEL_MAPPINGS: Record<string, string> = {
+  'F': 'Intern',
+  'E': 'Trainee',
+  'D': 'Associate',
+  'C': 'Associate II',
+  'B': 'Intermediate',
+  'A': 'Intermediate II',
+  '1': 'Senior',
+  '2': 'Senior II',
+  '3': 'Principal',
+  '4': 'Principal II',
+  '5': 'Distinguished',
+  '6': 'Distinguished II',
+  '7': 'Fellow',
+  '8': 'Fellow II'
+};
+
+/**
+ * Convert level code to JobLevel object
+ */
+function createJobLevel(levelCode: string): JobLevel {
+  return {
+    code: levelCode,
+    name: LEVEL_MAPPINGS[levelCode] || levelCode
+  };
+}
 
 /**
  * Raw job data structure from the API
@@ -35,7 +65,7 @@ export async function groupJobsByValidRootId(data: ApiJobResponse[]): Promise<Jo
         id: jobCodeWithoutCountry,
         jobTitle: job.jobTitle,
         mainSkill: job.mainSkill,
-        level: job.level,
+        level: createJobLevel(job.level),
         guild: job.guild,
         validJobRootId: job.validJobRootId,
         jobCodes: {}
