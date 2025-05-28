@@ -1,0 +1,69 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import SearchFilterControls from '../../components/SearchFilterControls.tsx';
+import FilterTags from '../../components/FilterTags.tsx';
+import JobList from '../../components/JobList.tsx';
+import JobDetails from '../../components/JobDetails.astro';
+
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const jobEntries = await getCollection('jobs');
+  
+  return jobEntries.map(entry => ({
+    params: { jobCode: entry.id },
+    props: { job: { id: entry.id, ...entry.data } }
+  }));
+}
+
+const { jobCode } = Astro.params;
+const { job } = Astro.props;
+
+// Get all jobs for the job list
+const jobEntries = await getCollection('jobs');
+const jobs = jobEntries.map(entry => ({
+  id: entry.id,
+  ...entry.data
+}));
+
+// Pre-calculate filter options for better performance
+const guilds = [...new Set(jobs.map(job => job.guild))];
+const mainSkills = [...new Set(jobs.map(job => job.mainSkill))];
+const levels = [...new Set(jobs.map(job => `${job.level.code}-${job.level.name}`))];
+
+// Mock data for FilterTags demonstration
+const mockActiveFilters = {
+  guilds: ["Data and AI"],
+  mainSkills: ["AI Engineer"],
+  levels: ["2-Senior"],
+  search: undefined
+};
+
+const mockResultsCount = 24;
+---
+
+<Layout>
+  <SearchFilterControls 
+    slot="search-controls"
+    client:load
+    guilds={guilds}
+    mainSkills={mainSkills}
+    levels={levels}
+  />
+  
+  <FilterTags 
+    slot="filter-tags"
+    client:load
+    activeFilters={mockActiveFilters}
+    resultsCount={mockResultsCount}
+  />
+  
+  <JobList 
+    slot="job-list"
+    client:load 
+    jobs={jobs} 
+  />
+  
+  <!-- Job details with the selected job -->
+  <JobDetails slot="job-details" job={job} />
+</Layout> 

@@ -12,9 +12,11 @@ const JobList: React.FC<JobListProps> = ({ jobs }) => {
       {jobs.map((job) => {
         const { id, jobTitle, level } = job;
         return (
-        <div
+        <a
           key={id}
-          className="w-full px-4 py-3 border-b border-gray-100 hover:bg-gray-50 transition-colors duration-150 cursor-pointer"
+          href={`/jobs/${id}`}
+          className="w-full px-4 py-3 border-b border-gray-100 hover:bg-gray-50 transition-colors duration-150 cursor-pointer block"
+          data-astro-transition={`job-item-${id}`}
         >
           <div className="flex items-center justify-between">
             <div className="text-sm font-medium text-gray-900 truncate flex-1 min-w-0 pr-3">
@@ -27,7 +29,7 @@ const JobList: React.FC<JobListProps> = ({ jobs }) => {
               <ChevronIcon direction="right" className="h-5 w-5 text-gray-400 flex-shrink-0" />
             </div>
           </div>
-        </div>
+        </a>
         );
       })}
     </>

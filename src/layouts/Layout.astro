@@ -2,6 +2,7 @@
 // Layout.astro - Main layout component with all visual structure
 import '../styles/global.css';
 import Header from '../components/Header.astro';
+import { ViewTransitions } from 'astro:transitions';
 ---
 
 <!doctype html>
@@ -12,6 +13,7 @@ import Header from '../components/Header.astro';
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="generator" content={Astro.generator} />
 		<title>Job Explorer</title>
+		<ViewTransitions />
 	</head>
 	<body>
 		<!-- Fixed Header -->
