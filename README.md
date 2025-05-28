@@ -83,7 +83,6 @@ The application fetches job data at build time from:
 https://job-arch-app-service-2.azurewebsites.net/api/ViewValidJobs
 ```
 
-
 Jobs are automatically grouped and processed during the build to provide filtering capabilities by:
 - Guild
 - Main Skill
