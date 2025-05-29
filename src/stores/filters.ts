@@ -23,10 +23,39 @@ export function updateSearch(search: string) {
 
 export function toggleGuild(guild: string) {
   const current = filtersStore.get()
-  const guilds = current.guilds.includes(guild)
+  const newGuilds = current.guilds.includes(guild)
     ? current.guilds.filter(g => g !== guild)
     : [...current.guilds, guild]
-  filtersStore.set({ ...current, guilds })
+
+  let newMainSkills = current.mainSkills;
+
+  // If no guilds are selected, clear main skills
+  if (newGuilds.length === 0) {
+    newMainSkills = [];
+  }
+  // IMPORTANT: The logic to filter mainSkills based on selected guilds
+  // is primarily handled in the SearchFilterControls.tsx component by computing `availableMainSkills`.
+  // This ensures the dropdown options are always relevant.
+  //
+  // If we had the full 'jobs' list here, we could also proactively clear
+  // selected main skills that are no longer valid with the new set of selected guilds.
+  // For example:
+  // if (newGuilds.length > 0 && current.mainSkills.length > 0) {
+  //   const allJobs = /* somehow get all jobs here */;
+  //   const validSkillsForSelectedGuilds = new Set<string>();
+  //   allJobs.forEach(job => {
+  //     if (newGuilds.includes(job.guild)) {
+  //       validSkillsForSelectedGuilds.add(job.mainSkill);
+  //     }
+  //   });
+  //   newMainSkills = current.mainSkills.filter(skill => validSkillsForSelectedGuilds.has(skill));
+  // }
+  // Since 'allJobs' isn't easily available here without significant refactoring,
+  // we rely on the component to manage the available options.
+  // The current selected skills might include some that are not in any of the currently selected guilds.
+  // However, the filtering logic in `filteredJobsStore` will still work correctly because it checks both.
+
+  filtersStore.set({ ...current, guilds: newGuilds, mainSkills: newMainSkills })
 }
 
 export function toggleMainSkill(mainSkill: string) {

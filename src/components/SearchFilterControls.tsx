@@ -3,21 +3,37 @@ import { useStore } from '@nanostores/react';
 import { filtersStore, updateSearch, toggleGuild, toggleMainSkill, toggleLevel } from '../stores/filters';
 import Dropdown from './Dropdown';
 import XMarkIcon from './icons/XMarkIcon';
+import type { Job } from '../types';
 
 interface SearchFilterControlsProps {
   guilds?: string[];
   mainSkills?: string[];
   levels?: string[];
+  jobs: Job[];
 }
 
 const SearchFilterControls: React.FC<SearchFilterControlsProps> = ({
   guilds = [],
   mainSkills = [],
-  levels = []
+  levels = [],
+  jobs = []
 }) => {
   const filters = useStore(filtersStore);
   
   const clearSearch = () => updateSearch('');
+
+  const availableMainSkills = React.useMemo(() => {
+    if (filters.guilds.length === 0) {
+      return mainSkills;
+    }
+    const skillsInSelectedGuilds = new Set<string>();
+    jobs.forEach(job => {
+      if (filters.guilds.includes(job.guild)) {
+        skillsInSelectedGuilds.add(job.mainSkill);
+      }
+    });
+    return Array.from(skillsInSelectedGuilds);
+  }, [filters.guilds, mainSkills, jobs]);
 
   return (
     <div className="grid grid-cols-4 divide-x divide-gray-300">
@@ -54,7 +70,7 @@ const SearchFilterControls: React.FC<SearchFilterControlsProps> = ({
       <div className="px-6">
         <Dropdown 
           label="Main Skills" 
-          options={mainSkills} 
+          options={availableMainSkills}
           placeholder="All Skills"
           selectedValues={filters.mainSkills}
           onToggle={toggleMainSkill}
