@@ -1,17 +1,19 @@
 import React from 'react';
 import { useStore } from '@nanostores/react';
-import { filtersStore, clearFilter, clearAllFilters, toggleGuild, toggleMainSkill, toggleLevel } from '../stores/filters';
-import type { FilterTag } from '../types';
+import { filtersStore, clearFilter, clearAllFilters, toggleGuild, toggleMainSkill, toggleLevel, filteredJobsCountStore } from '../stores/filters';
+import type { FilterTag, Job } from '../types';
 import XMarkIcon from './icons/XMarkIcon';
 
 interface FilterTagsProps {
-  resultsCount?: number; // Keep this for now, will be real count in Phase 2
+  jobs: Job[]; // NEW: Need jobs array to calculate filtered count
 }
 
-const FilterTags: React.FC<FilterTagsProps> = ({
-  resultsCount = 0 // Default to 0, will be real count in Phase 2
-}) => {
+const FilterTags: React.FC<FilterTagsProps> = ({ jobs }) => {
   const filters = useStore(filtersStore);
+  const getFilteredCount = useStore(filteredJobsCountStore);
+  
+  // Calculate real filtered results count
+  const resultsCount = getFilteredCount(jobs);
   
   // Convert current filter state to FilterTag array
   const filterTags: FilterTag[] = [];

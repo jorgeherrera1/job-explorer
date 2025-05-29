@@ -1,16 +1,24 @@
 import React from 'react';
+import { useStore } from '@nanostores/react';
+import { filteredJobsStore } from '../stores/filters';
 import type { Job } from '../types';
 import ChevronIcon from './icons/ChevronIcon';
 
 interface JobListProps {
-  jobs: Job[];
+  jobs: Job[]; // Keep this prop - we need the full jobs array to filter
   selectedJobId?: string;
 }
 
 const JobList: React.FC<JobListProps> = ({ jobs, selectedJobId }) => {
+  // Subscribe to the filtering function
+  const getFilteredJobs = useStore(filteredJobsStore);
+  
+  // Apply filtering to the jobs array
+  const filteredJobs = getFilteredJobs(jobs);
+  
   return (
     <>
-      {jobs.map((job) => {
+      {filteredJobs.map((job) => {
         const { id, jobTitle, level } = job;
         const isSelected = selectedJobId === id;
         return (
@@ -46,6 +54,14 @@ const JobList: React.FC<JobListProps> = ({ jobs, selectedJobId }) => {
         </a>
         );
       })}
+      
+      {/* Show message when no jobs match filters */}
+      {filteredJobs.length === 0 && (
+        <div className="px-4 py-8 text-center text-gray-500">
+          <p className="text-sm">No jobs match the current filters.</p>
+          <p className="text-xs mt-1">Try clearing some filters to see more results.</p>
+        </div>
+      )}
     </>
   );
 };

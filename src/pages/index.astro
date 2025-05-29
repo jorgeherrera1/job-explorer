@@ -33,7 +33,7 @@ const levels = [...new Set(jobs.map(job => `${job.level.code}-${job.level.name}`
 	<FilterTags 
 		slot="filter-tags"
 		client:load
-		resultsCount={jobs.length}
+		jobs={jobs}
 	/>
 	
 	<div slot="job-list-header" class="text-sm text-gray-600 text-center">
