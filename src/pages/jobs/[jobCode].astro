@@ -30,16 +30,6 @@ const jobs = jobEntries.map(entry => ({
 const guilds = [...new Set(jobs.map(job => job.guild))];
 const mainSkills = [...new Set(jobs.map(job => job.mainSkill))];
 const levels = [...new Set(jobs.map(job => `${job.level.code}-${job.level.name}`))];
-
-// Mock data for FilterTags demonstration
-const mockActiveFilters = {
-  guilds: ["Data and AI"],
-  mainSkills: ["AI Engineer"],
-  levels: ["2-Senior"],
-  search: undefined
-};
-
-const mockResultsCount = 24;
 ---
 
 <Layout>
@@ -54,8 +44,7 @@ const mockResultsCount = 24;
   <FilterTags 
     slot="filter-tags"
     client:load
-    activeFilters={mockActiveFilters}
-    resultsCount={mockResultsCount}
+    resultsCount={jobs.length}
   />
   
   <div slot="job-list-header" class="text-sm text-gray-600 text-center">

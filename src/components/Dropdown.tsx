@@ -5,11 +5,12 @@ interface DropdownProps {
   label: string;
   options: string[];
   placeholder?: string;
+  selectedValues: string[];
+  onToggle: (value: string) => void;
 }
 
-const Dropdown: React.FC<DropdownProps> = ({ label, options, placeholder }) => {
+const Dropdown: React.FC<DropdownProps> = ({ label, options, placeholder, selectedValues, onToggle }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState<string[]>([]);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -22,16 +23,16 @@ const Dropdown: React.FC<DropdownProps> = ({ label, options, placeholder }) => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const toggleOption = (option: string) => {
-    setSelected(prev => 
-      prev.includes(option) 
-        ? prev.filter(item => item !== option)
-        : [...prev, option]
-    );
+  const handleOptionClick = (option: string) => {
+    onToggle(option);
   };
 
-  const displayValue = selected.length > 0 
-    ? `${selected.length} Selected`
+  const clearAllSelections = () => {
+    selectedValues.forEach(value => onToggle(value));
+  };
+
+  const displayValue = selectedValues.length > 0 
+    ? `${selectedValues.length} Selected`
     : placeholder || `Select ${label}`;
 
   return (
@@ -44,56 +45,56 @@ const Dropdown: React.FC<DropdownProps> = ({ label, options, placeholder }) => {
           <span className="text-xs font-semibold text-gray-700 uppercase tracking-wider">
             {label}
           </span>
-          <span className={`text-sm truncate ${selected.length > 0 ? 'text-gray-900 font-medium' : 'text-gray-500'}`}>
+          <span className={`text-sm truncate ${selectedValues.length > 0 ? 'text-gray-900 font-medium' : 'text-gray-500'}`}>
             {displayValue}
           </span>
         </div>
         <ChevronIcon direction="down" className={`h-4 w-4 text-gray-500 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </button>
 
-              {isOpen && (
-          <div className="absolute z-50 w-80 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg max-h-[500px] flex flex-col">
-            <div className="p-4 border-b border-gray-100 flex-shrink-0">
-              <div className="mb-3">
-                <p className="text-sm text-gray-600 mb-3">
-                  You can select one or more {label.toLowerCase()}
-                </p>
-                
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">
-                    ({selected.length}) Selected
-                  </span>
-                  {selected.length > 0 && (
-                    <button
-                      onClick={() => setSelected([])}
-                      className="text-sm text-blue-600 hover:text-blue-800 font-medium"
-                    >
-                      Clear All
-                    </button>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <div className="overflow-y-auto flex-1 p-4">
-              <div className="grid grid-cols-1 gap-3">
-                {options.map(option => (
+      {isOpen && (
+        <div className="absolute z-50 w-80 mt-2 bg-white border border-gray-200 rounded-lg shadow-lg max-h-[500px] flex flex-col">
+          <div className="p-4 border-b border-gray-100 flex-shrink-0">
+            <div className="mb-3">
+              <p className="text-sm text-gray-600 mb-3">
+                You can select one or more {label.toLowerCase()}
+              </p>
+              
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600">
+                  ({selectedValues.length}) Selected
+                </span>
+                {selectedValues.length > 0 && (
                   <button
-                    key={option}
-                    onClick={() => toggleOption(option)}
-                    className={`px-4 py-2 text-sm rounded-full border text-center transition-all duration-200 font-medium ${
-                      selected.includes(option)
-                        ? 'bg-blue-50 border-blue-200 text-blue-700 shadow-sm'
-                        : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100 hover:border-gray-300'
-                    }`}
+                    onClick={clearAllSelections}
+                    className="text-sm text-blue-600 hover:text-blue-800 font-medium"
                   >
-                    {option}
+                    Clear All
                   </button>
-                ))}
+                )}
               </div>
             </div>
           </div>
-        )}
+
+          <div className="overflow-y-auto flex-1 p-4">
+            <div className="grid grid-cols-1 gap-3">
+              {options.map(option => (
+                <button
+                  key={option}
+                  onClick={() => handleOptionClick(option)}
+                  className={`px-4 py-2 text-sm rounded-full border text-center transition-all duration-200 font-medium ${
+                    selectedValues.includes(option)
+                      ? 'bg-blue-50 border-blue-200 text-blue-700 shadow-sm'
+                      : 'bg-gray-50 border-gray-200 text-gray-700 hover:bg-gray-100 hover:border-gray-300'
+                  }`}
+                >
+                  {option}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

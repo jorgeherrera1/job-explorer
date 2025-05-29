@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { useStore } from '@nanostores/react';
+import { filtersStore, updateSearch, toggleGuild, toggleMainSkill, toggleLevel } from '../stores/filters';
 import Dropdown from './Dropdown';
 import XMarkIcon from './icons/XMarkIcon';
 
@@ -13,9 +15,9 @@ const SearchFilterControls: React.FC<SearchFilterControlsProps> = ({
   mainSkills = [],
   levels = []
 }) => {
-  const [searchTerm, setSearchTerm] = useState('');
-
-  const clearSearch = () => setSearchTerm('');
+  const filters = useStore(filtersStore);
+  
+  const clearSearch = () => updateSearch('');
 
   return (
     <div className="grid grid-cols-4 divide-x divide-gray-300">
@@ -23,12 +25,12 @@ const SearchFilterControls: React.FC<SearchFilterControlsProps> = ({
       <div className="relative pr-6">
         <input
           type="text"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          value={filters.search}
+          onChange={(e) => updateSearch(e.target.value)}
           className="w-full bg-transparent placeholder-gray-500 focus:outline-none text-lg h-12"
           placeholder="Search jobs..."
         />
-        {searchTerm && (
+        {filters.search && (
           <button
             onClick={clearSearch}
             className="absolute right-8 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
@@ -40,15 +42,33 @@ const SearchFilterControls: React.FC<SearchFilterControlsProps> = ({
 
       {/* Filters */}
       <div className="px-6">
-        <Dropdown label="Guilds" options={guilds} placeholder="All Guilds" />
+        <Dropdown 
+          label="Guilds" 
+          options={guilds} 
+          placeholder="All Guilds"
+          selectedValues={filters.guilds}
+          onToggle={toggleGuild}
+        />
       </div>
       
       <div className="px-6">
-        <Dropdown label="Main Skills" options={mainSkills} placeholder="All Skills" />
+        <Dropdown 
+          label="Main Skills" 
+          options={mainSkills} 
+          placeholder="All Skills"
+          selectedValues={filters.mainSkills}
+          onToggle={toggleMainSkill}
+        />
       </div>
       
       <div className="pl-6">
-        <Dropdown label="Level" options={levels} placeholder="All Levels" />
+        <Dropdown 
+          label="Level" 
+          options={levels} 
+          placeholder="All Levels"
+          selectedValues={filters.levels}
+          onToggle={toggleLevel}
+        />
       </div>
     </div>
   );
