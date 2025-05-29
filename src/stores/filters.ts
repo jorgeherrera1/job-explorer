@@ -41,8 +41,6 @@ export function toggleGuild(guild: string) {
   // selected main skills that are no longer valid with the new set of selected guilds.
   // For example:
   // if (newGuilds.length > 0 && current.mainSkills.length > 0) {
-  //   const allJobs = /* somehow get all jobs here */;
-  //   const validSkillsForSelectedGuilds = new Set<string>();
   //   allJobs.forEach(job => {
   //     if (newGuilds.includes(job.guild)) {
   //       validSkillsForSelectedGuilds.add(job.mainSkill);
