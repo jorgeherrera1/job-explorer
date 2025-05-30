@@ -64,12 +64,23 @@ export interface Responsibility {
 }
 
 /**
+ * Technical skill interface representing a single technical skill
+ */
+export interface TechnicalSkill {
+  skillName: string;
+  skillLevel: string;
+  skillDescription: string;
+  observableBehaviors: string[];
+}
+
+/**
  * Job details interface representing detailed job information from the API
  * Contains mission information and responsibilities for a specific language
  */
 export interface JobDetails {
   mission: string;
   responsibilities: Responsibility[];
+  technicalSkills: TechnicalSkill[];
 }
 
 /**

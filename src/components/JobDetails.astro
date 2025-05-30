@@ -157,9 +157,51 @@ const regionalCodes = Object.entries(job.jobCodes).map(([country, code]) => ({
     
     <!-- Technical Skills Tab -->
     <div id="technical-skills-tab" class="tab-content hidden">
-      <div class="text-center py-12 text-gray-500">
-        <p>Technical skills content will be implemented in the future.</p>
-      </div>
+      {jobDetails?.technicalSkills && jobDetails.technicalSkills.length > 0 ? (
+        <div class="space-y-4">
+          {jobDetails.technicalSkills.map(skill => (
+            <details class="border border-gray-200 rounded-lg overflow-hidden">
+              <summary class="px-4 py-3 bg-indigo-900 text-white cursor-pointer hover:bg-indigo-800 transition-colors list-none">
+                <div class="flex items-center justify-between">
+                  <span class="font-medium">{skill.skillName}</span>
+                  <div class="flex items-center gap-3">
+                    <span class="px-2 py-1 bg-blue-100 text-blue-600 rounded-full text-xs font-semibold">{skill.skillLevel}</span>
+                    <svg class="w-5 h-5 transition-transform duration-200 chevron-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M19 9l-7 7-7-7"></path>
+                    </svg>
+                  </div>
+                </div>
+              </summary>
+              <div class="p-4 bg-gray-50">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  <div>
+                    <p class="text-gray-700">{skill.skillDescription}</p>
+                  </div>
+                  <div>
+                    {skill.observableBehaviors.length > 0 && (
+                      <>
+                        <h4 class="font-medium text-gray-900 mb-2">Observable Behaviors</h4>
+                        <ul class="space-y-2">
+                          {skill.observableBehaviors.map(behavior => (
+                            <li class="flex items-start gap-2">
+                              <span class="text-indigo-600 mt-1">•</span>
+                              <span class="text-gray-700 text-sm">{behavior}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </details>
+          ))}
+        </div>
+      ) : (
+        <div class="text-center py-12 text-gray-500">
+          <p>This job does not have technical skills defined.</p>
+        </div>
+      )}
     </div>
     
     <!-- Foundational Skills Tab -->
@@ -215,6 +257,22 @@ const regionalCodes = Object.entries(job.jobCodes).map(([country, code]) => ({
         const targetContent = document.getElementById(`${targetTab}-tab`);
         if (targetContent) {
           targetContent.classList.remove('hidden');
+        }
+      });
+    });
+
+    // Technical skills chevron rotation functionality
+    const technicalSkillsDetails = document.querySelectorAll('#technical-skills-tab details');
+    technicalSkillsDetails.forEach(details => {
+      const chevronIcon = details.querySelector('.chevron-icon') as SVGElement;
+      
+      details.addEventListener('toggle', () => {
+        if (chevronIcon) {
+          if ((details as HTMLDetailsElement).open) {
+            chevronIcon.style.transform = 'rotate(180deg)';
+          } else {
+            chevronIcon.style.transform = 'rotate(0deg)';
+          }
         }
       });
     });
