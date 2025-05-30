@@ -99,9 +99,15 @@ const regionalCodes = Object.entries(job.jobCodes).map(([country, code]) => ({
       </button>
       <button 
         class="px-4 py-2 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700 tab-button"
-        data-tab="skills"
+        data-tab="technical-skills"
       >
-        Skills
+        Technical Skills
+      </button>
+      <button 
+        class="px-4 py-2 text-sm font-medium border-b-2 border-transparent text-gray-500 hover:text-gray-700 tab-button"
+        data-tab="foundational-skills"
+      >
+        Foundational Skills
       </button>
     </div>
   </div>
@@ -149,10 +155,17 @@ const regionalCodes = Object.entries(job.jobCodes).map(([country, code]) => ({
       )}
     </div>
     
-    <!-- Skills Tab -->
-    <div id="skills-tab" class="tab-content hidden">
+    <!-- Technical Skills Tab -->
+    <div id="technical-skills-tab" class="tab-content hidden">
       <div class="text-center py-12 text-gray-500">
-        <p>Skills content will be implemented in the future.</p>
+        <p>Technical skills content will be implemented in the future.</p>
+      </div>
+    </div>
+    
+    <!-- Foundational Skills Tab -->
+    <div id="foundational-skills-tab" class="tab-content hidden">
+      <div class="text-center py-12 text-gray-500">
+        <p>Foundational skills content will be implemented in the future.</p>
       </div>
     </div>
   </div>
