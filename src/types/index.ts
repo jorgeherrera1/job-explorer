@@ -64,14 +64,24 @@ export interface Responsibility {
 }
 
 /**
- * Technical skill interface representing a single technical skill
+ * Shared skill interface for both technical and foundational skills
  */
-export interface TechnicalSkill {
+export interface Skill {
   skillName: string;
   skillLevel: string;
   skillDescription: string;
   observableBehaviors: string[];
 }
+
+/**
+ * Technical skill type alias using shared Skill interface
+ */
+export type TechnicalSkill = Skill;
+
+/**
+ * Foundational skill type alias using shared Skill interface  
+ */
+export type FoundationalSkill = Skill;
 
 /**
  * Job details interface representing detailed job information from the API
@@ -81,6 +91,7 @@ export interface JobDetails {
   mission: string;
   responsibilities: Responsibility[];
   technicalSkills: TechnicalSkill[];
+  foundationalSkills: FoundationalSkill[];
 }
 
 /**

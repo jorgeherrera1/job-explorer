@@ -1,5 +1,6 @@
-import type { JobDetails, Responsibility, TechnicalSkill } from '../types/index.js';
+import type { JobDetails, Responsibility } from '../types/index.js';
 import { getLanguageApiValue, DEFAULT_LANGUAGE } from './languages.js';
+import { transformSkills } from './skillTransforms.js';
 
 const API_BASE_URL = 'https://job-arch-app-service-2.azurewebsites.net/api';
 
@@ -48,37 +49,17 @@ export async function fetchJobDetails(
       });
     }
 
-    // Parse technical skills from API response
-    const technicalSkills: TechnicalSkill[] = [];
-    
-    if (data.technicalSkills && Array.isArray(data.technicalSkills)) {
-      data.technicalSkills.forEach((skill: any) => {
-        if (skill.title && skill.description && skill.proficiencyText) {
-          // Extract observable behaviors
-          const observableBehaviors: string[] = [];
-          
-          if (skill.observableBehaviors && Array.isArray(skill.observableBehaviors)) {
-            skill.observableBehaviors.forEach((behavior: any) => {
-              if (behavior.text && behavior.text.trim()) {
-                observableBehaviors.push(behavior.text.trim());
-              }
-            });
-          }
-          
-          technicalSkills.push({
-            skillName: skill.title,
-            skillLevel: skill.proficiencyText,
-            skillDescription: skill.description,
-            observableBehaviors
-          });
-        }
-      });
-    }
+    // Parse technical skills using shared transform function
+    const technicalSkills = data.technicalSkills ? transformSkills(data.technicalSkills) : [];
+
+    // Parse foundational skills using shared transform function  
+    const foundationalSkills = data.foundationalSkills ? transformSkills(data.foundationalSkills) : [];
     
     return {
       mission: data.mission,
       responsibilities,
-      technicalSkills
+      technicalSkills,
+      foundationalSkills
     };
     
   } catch (error) {
