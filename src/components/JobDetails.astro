@@ -1,11 +1,12 @@
 ---
-import type { Job } from '../types';
+import type { Job, JobDetails } from '../types';
 
 interface Props {
   job: Job;
+  jobDetails?: JobDetails | null;
 }
 
-const { job } = Astro.props;
+const { job, jobDetails } = Astro.props;
 
 // Helper function to get country flags based on country names
 function getCountryFlag(country: string): string {
@@ -116,9 +117,13 @@ const regionalCodes = Object.entries(job.jobCodes).map(([country, code]) => ({
         <span class="text-sm font-medium text-blue-600">Job Description</span>
       </div>
       <div class="prose prose-sm max-w-none text-gray-700">
-        <p>
-          General content will be implemented in the future
-        </p>
+        {jobDetails?.mission ? (
+          <p>{jobDetails.mission}</p>
+        ) : (
+          <p class="text-gray-500 italic">
+            Loading job description...
+          </p>
+        )}
       </div>
     </div>
     

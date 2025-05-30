@@ -53,4 +53,21 @@ export interface ActiveFilters {
   mainSkills: string[];
   levels: string[];
   search?: string;
+}
+
+/**
+ * Job details interface representing detailed job information from the API
+ * Contains mission information for a specific language
+ */
+export interface JobDetails {
+  mission: string;
+}
+
+/**
+ * Language configuration interface for multi-language support
+ */
+export interface LanguageConfig {
+  code: string;
+  apiValue: string;
+  displayName: string;
 } 

@@ -1,11 +1,6 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import SearchFilterControls from '../../components/SearchFilterControls.tsx';
-import FilterTags from '../../components/FilterTags.tsx';
-import JobList from '../../components/JobList.tsx';
-import JobDetails from '../../components/JobDetails.astro';
-
 import { getCollection } from 'astro:content';
+import { DEFAULT_LANGUAGE } from '../../utils/languages.js';
 
 export async function getStaticPaths() {
   const jobEntries = await getCollection('jobs');
@@ -17,48 +12,7 @@ export async function getStaticPaths() {
 }
 
 const { jobCode } = Astro.params;
-const { job } = Astro.props;
 
-// Get all jobs for the job list
-const jobEntries = await getCollection('jobs');
-const jobs = jobEntries.map(entry => ({
-  id: entry.id,
-  ...entry.data
-}));
-
-// Pre-calculate filter options for better performance
-const guilds = [...new Set(jobs.map(job => job.guild))];
-const mainSkills = [...new Set(jobs.map(job => job.mainSkill))];
-const levels = [...new Set(jobs.map(job => `${job.level.code}-${job.level.name}`))];
----
-
-<Layout>
-  <SearchFilterControls 
-    slot="search-controls"
-    client:load
-    guilds={guilds}
-    mainSkills={mainSkills}
-    levels={levels}
-    jobs={jobs}
-  />
-  
-  <FilterTags 
-    slot="filter-tags"
-    client:load
-    jobs={jobs}
-  />
-  
-  <div slot="job-list-header" class="text-sm text-gray-600 text-center">
-    Select a Job Position to see the description
-  </div>
-  
-  <JobList 
-    slot="job-list"
-    client:load 
-    jobs={jobs}
-    selectedJobId={job.id}
-  />
-  
-  <!-- Job details with the selected job -->
-  <JobDetails slot="job-details" job={job} />
-</Layout> 
+// Redirect to default language
+return Astro.redirect(`/jobs/${jobCode}/${DEFAULT_LANGUAGE}`);
+--- 
