@@ -56,11 +56,20 @@ export interface ActiveFilters {
 }
 
 /**
+ * Responsibility interface representing a single job responsibility
+ */
+export interface Responsibility {
+  responsibilityArea: string;
+  responsibilityDescription: string;
+}
+
+/**
  * Job details interface representing detailed job information from the API
- * Contains mission information for a specific language
+ * Contains mission information and responsibilities for a specific language
  */
 export interface JobDetails {
   mission: string;
+  responsibilities: Responsibility[];
 }
 
 /**

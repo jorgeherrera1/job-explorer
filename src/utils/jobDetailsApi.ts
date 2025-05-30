@@ -1,4 +1,4 @@
-import type { JobDetails } from '../types/index.js';
+import type { JobDetails, Responsibility } from '../types/index.js';
 import { getLanguageApiValue, DEFAULT_LANGUAGE } from './languages.js';
 
 const API_BASE_URL = 'https://job-arch-app-service-2.azurewebsites.net/api';
@@ -24,8 +24,33 @@ export async function fetchJobDetails(
       return null;
     }
     
+    // Parse responsibilities from API response
+    const responsibilities: Responsibility[] = [];
+    
+    if (data.responsibilities && Array.isArray(data.responsibilities)) {
+      data.responsibilities.forEach((responsibilityGroup: any) => {
+        if (responsibilityGroup.title && responsibilityGroup.list && Array.isArray(responsibilityGroup.list)) {
+          const responsibilityArea = responsibilityGroup.title;
+          
+          // Combine multiple list items with "; " separator if needed
+          const descriptions = responsibilityGroup.list
+            .map((item: any) => item.content)
+            .filter((content: string) => content && content.trim())
+            .join('; ');
+          
+          if (descriptions) {
+            responsibilities.push({
+              responsibilityArea,
+              responsibilityDescription: descriptions
+            });
+          }
+        }
+      });
+    }
+    
     return {
-      mission: data.mission
+      mission: data.mission,
+      responsibilities
     };
     
   } catch (error) {
