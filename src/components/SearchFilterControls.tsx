@@ -3,37 +3,29 @@ import { useStore } from '@nanostores/react';
 import { filtersStore, updateSearch, toggleGuild, toggleMainSkill, toggleLevel } from '../stores/filters';
 import Dropdown from './Dropdown';
 import XMarkIcon from './icons/XMarkIcon';
-import type { Job } from '../types';
 
 interface SearchFilterControlsProps {
-  guilds?: string[];
-  mainSkills?: string[];
+  mainSkills: Array<{mainSkill: string, guild: string}>;
   levels?: string[];
-  jobs: Job[];
 }
 
 const SearchFilterControls: React.FC<SearchFilterControlsProps> = ({
-  guilds = [],
-  mainSkills = [],
-  levels = [],
-  jobs = []
+  mainSkills,
+  levels = []
 }) => {
   const filters = useStore(filtersStore);
   
   const clearSearch = () => updateSearch('');
 
-  const availableMainSkills = React.useMemo(() => {
-    if (filters.guilds.length === 0) {
-      return mainSkills;
-    }
-    const skillsInSelectedGuilds = new Set<string>();
-    jobs.forEach(job => {
-      if (filters.guilds.includes(job.guild)) {
-        skillsInSelectedGuilds.add(job.mainSkill);
-      }
-    });
-    return Array.from(skillsInSelectedGuilds);
-  }, [filters.guilds, mainSkills, jobs]);
+  // Derive guilds from the skills data
+  const guilds = [...new Set(mainSkills.map(item => item.guild))];
+
+  // Derive available main skills based on selected guilds
+  const availableMainSkills = filters.guilds.length === 0
+    ? [...new Set(mainSkills.map(item => item.mainSkill))]
+    : [...new Set(mainSkills
+        .filter(item => filters.guilds.includes(item.guild))
+        .map(item => item.mainSkill))];
 
   return (
     <div className="grid grid-cols-4 divide-x divide-gray-300">

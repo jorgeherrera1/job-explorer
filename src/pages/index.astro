@@ -13,9 +13,12 @@ const jobs = jobEntries.map(entry => ({
 	...entry.data
 }));
 
-// Pre-calculate filter options for better performance
-const guilds = [...new Set(jobs.map(job => job.guild))];
-const mainSkills = [...new Set(jobs.map(job => job.mainSkill))];
+// Create lightweight skill-guild relationships
+const mainSkills = jobs.map(job => ({
+	mainSkill: job.mainSkill,
+	guild: job.guild
+}));
+
 // Create level options from the available job levels
 const levels = [...new Set(jobs.map(job => `${job.level.code}-${job.level.name}`))];
 
@@ -25,10 +28,8 @@ const levels = [...new Set(jobs.map(job => `${job.level.code}-${job.level.name}`
 	<SearchFilterControls 
 		slot="search-controls"
 		client:load
-		guilds={guilds}
 		mainSkills={mainSkills}
 		levels={levels}
-		jobs={jobs}
 	/>
 	
 	<FilterTags 

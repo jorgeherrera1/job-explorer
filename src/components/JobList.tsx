@@ -7,10 +7,9 @@ import ChevronIcon from './icons/ChevronIcon';
 interface JobListProps {
   jobs: Job[]; // Keep this prop - we need the full jobs array to filter
   selectedJobId?: string;
-  currentLanguage?: string;
 }
 
-const JobList: React.FC<JobListProps> = ({ jobs, selectedJobId, currentLanguage }) => {
+const JobList: React.FC<JobListProps> = ({ jobs, selectedJobId }) => {
   // Subscribe to the filtering function
   const getFilteredJobs = useStore(filteredJobsStore);
   
@@ -25,7 +24,7 @@ const JobList: React.FC<JobListProps> = ({ jobs, selectedJobId, currentLanguage 
         return (
         <a
           key={id}
-          href={`/jobs/${id}/${currentLanguage || 'en'}`}
+          href={`/jobs/${id}`}
           className={`w-full px-4 py-3 transition-colors duration-150 cursor-pointer block ${
             isSelected 
               ? 'bg-indigo-900 rounded-full text-white border-b-transparent' 
