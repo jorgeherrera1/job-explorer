@@ -56,6 +56,7 @@ const SearchFilterControls: React.FC<SearchFilterControlsProps> = ({
           placeholder="All Guilds"
           selectedValues={filters.guilds}
           onToggle={toggleGuild}
+          sortAlphabetically={true}
         />
       </div>
       
@@ -66,6 +67,7 @@ const SearchFilterControls: React.FC<SearchFilterControlsProps> = ({
           placeholder="All Skills"
           selectedValues={filters.mainSkills}
           onToggle={toggleMainSkill}
+          sortAlphabetically={true}
         />
       </div>
       

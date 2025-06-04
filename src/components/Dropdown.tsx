@@ -7,9 +7,10 @@ interface DropdownProps {
   placeholder?: string;
   selectedValues: string[];
   onToggle: (value: string) => void;
+  sortAlphabetically?: boolean;
 }
 
-const Dropdown: React.FC<DropdownProps> = ({ label, options, placeholder, selectedValues, onToggle }) => {
+const Dropdown: React.FC<DropdownProps> = ({ label, options, placeholder, selectedValues, onToggle, sortAlphabetically = false }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const popoverRef = useRef<HTMLDivElement>(null);
@@ -17,6 +18,11 @@ const Dropdown: React.FC<DropdownProps> = ({ label, options, placeholder, select
   const uniqueId = useId();
   const popoverId = `dropdown-${uniqueId}`;
   
+  // Sort options alphabetically if requested
+  const sortedOptions = sortAlphabetically 
+    ? [...options].sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))
+    : options;
+
   // Feature detection for Popover API
   const supportsPopover = typeof window !== 'undefined' && 'popover' in HTMLElement.prototype;
 
@@ -122,7 +128,7 @@ const Dropdown: React.FC<DropdownProps> = ({ label, options, placeholder, select
 
       <div className="overflow-y-auto flex-1 p-4">
         <div className="grid grid-cols-1 gap-3">
-          {options.map(option => (
+          {sortedOptions.map(option => (
             <button
               key={option}
               onClick={() => handleOptionClick(option)}

@@ -20,15 +20,19 @@ export function transformSkills(apiSkills: ApiSkill[]): Skill[] {
   }
 
   return apiSkills.map(skill => {
-    // Extract observable behaviors text values
+    // Extract observable behaviors text values and deduplicate
     const observableBehaviors: string[] = [];
     
     if (skill.observableBehaviors && Array.isArray(skill.observableBehaviors)) {
+      const uniqueBehaviors = new Set<string>();
+      
       skill.observableBehaviors.forEach((behavior: any) => {
         if (behavior.text && behavior.text.trim()) {
-          observableBehaviors.push(behavior.text.trim());
+          uniqueBehaviors.add(behavior.text.trim());
         }
       });
+      
+      observableBehaviors.push(...uniqueBehaviors);
     }
     
     return {
