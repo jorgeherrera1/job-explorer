@@ -17,7 +17,6 @@ export async function getStaticPaths() {
   }));
 }
 
-const { jobCode } = Astro.params;
 const { job } = Astro.props;
 
 // Always fetch English job details (hardcode to 'en')
@@ -31,7 +30,7 @@ const jobs = jobEntries.map(entry => ({
 }));
 
 // Pre-calculate filter options for better performance
-const guilds = [...new Set(jobs.map(job => job.guild))];
+
 const mainSkills = jobs.map(job => ({ mainSkill: job.mainSkill, guild: job.guild }));
 const levels = [...new Set(jobs.map(job => `${job.level.code}-${job.level.name}`))];
 ---
