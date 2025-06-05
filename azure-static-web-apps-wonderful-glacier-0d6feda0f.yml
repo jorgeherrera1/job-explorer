@@ -63,7 +63,15 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
+        # Access the output variable from the PreviewDeploy task
         $previewUrl = "$(PreviewDeploy.AZURESTATICWEBAPP_STATIC_WEB_APP_URL)"
+        
+        if ([string]::IsNullOrEmpty($previewUrl) -or $previewUrl -eq "`$(PreviewDeploy.AZURESTATICWEBAPP_STATIC_WEB_APP_URL)") {
+          Write-Host "##[warning]Preview URL not available. This may happen if the deployment failed or the output variable was not set."
+          Write-Host "##[section]📝 Environment: $(Build.SourceBranchName)"
+          exit 0
+        }
+        
         Write-Host "##[section]🚀 Preview Environment Deployed!"
         Write-Host "##[section]🔗 URL: $previewUrl"
         Write-Host "##[section]📝 Environment: $(Build.SourceBranchName)"
