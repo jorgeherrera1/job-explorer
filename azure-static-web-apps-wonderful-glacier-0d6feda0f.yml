@@ -1,4 +1,4 @@
-name: Motivus - Job Explorer - CI/CD Pipeline
+name: Job Explorer - CI/CD
 
 # Trigger on pushes to main and feature/hotfix branches
 trigger:
@@ -19,19 +19,6 @@ variables:
   # Determine if this is the main branch
   - name: isMainBranch
     value: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
-  
-  # Generate safe environment name (max 16 chars, alphanumeric only)
-  # Skip prefixes like 'feature/' to maximize meaningful characters
-  - name: previewEnvironmentName
-    value: $[
-      if(startsWith(variables['Build.SourceBranch'], 'refs/pull/'),
-        format('pr{0}', variables['System.PullRequest.PullRequestNumber']),
-        if(le(length(replace(replace(replace(variables['Build.SourceBranchName'], 'feature/', ''), 'hotfix/', ''), '-', '')), 16),
-          replace(replace(replace(variables['Build.SourceBranchName'], 'feature/', ''), 'hotfix/', ''), '-', ''),
-          substring(replace(replace(replace(variables['Build.SourceBranchName'], 'feature/', ''), 'hotfix/', ''), '-', ''), 0, 16)
-        )
-      )
-    ]
 
 jobs:
 - job: build_and_deploy_job
@@ -59,14 +46,14 @@ jobs:
 
   # Deploy to Preview Environment (feature branches and PRs)
   - task: AzureStaticWebApp@0
-    displayName: 'Deploy to Preview Environment: $(previewEnvironmentName)'
+    displayName: 'Deploy to Preview Environment'
     condition: ne(variables.isMainBranch, 'true')
     inputs:
       azure_static_web_apps_api_token: $(AZURE_STATIC_WEB_APPS_API_TOKEN_WONDERFUL_GLACIER_0D6FEDA0F)
       app_location: "/"
       api_location: ""
       output_location: "dist"
-      deployment_environment: $(previewEnvironmentName)  # Creates named preview environment
+      deployment_environment: $(Build.SourceBranchName)  # Use branch name directly for now
     name: PreviewDeploy
 
   # Optional: Display preview URL for easy access
@@ -79,7 +66,7 @@ jobs:
         $previewUrl = "$(PreviewDeploy.AZURESTATICWEBAPP_STATIC_WEB_APP_URL)"
         Write-Host "##[section]🚀 Preview Environment Deployed!"
         Write-Host "##[section]🔗 URL: $previewUrl"
-        Write-Host "##[section]📝 Environment: $(previewEnvironmentName)"
+        Write-Host "##[section]📝 Environment: $(Build.SourceBranchName)"
         
         # Set as pipeline variable for use in other tasks
         Write-Host "##vso[task.setvariable variable=PreviewUrl;isOutput=true]$previewUrl"
