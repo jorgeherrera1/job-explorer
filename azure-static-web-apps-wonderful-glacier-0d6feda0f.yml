@@ -47,6 +47,7 @@ jobs:
   # Deploy to Preview Environment (feature branches and PRs)
   - task: AzureStaticWebApp@0
     displayName: 'Deploy to Preview Environment'
+    name: PreviewDeploy
     condition: ne(variables.isMainBranch, 'true')
     inputs:
       azure_static_web_apps_api_token: $(AZURE_STATIC_WEB_APPS_API_TOKEN_WONDERFUL_GLACIER_0D6FEDA0F)
@@ -54,7 +55,6 @@ jobs:
       api_location: ""
       output_location: "dist"
       deployment_environment: $(Build.SourceBranchName)  # Use branch name directly for now
-    name: PreviewDeploy
 
   # Optional: Display preview URL for easy access
   - task: PowerShell@2
@@ -63,8 +63,14 @@ jobs:
     inputs:
       targetType: 'inline'
       script: |
-        # Access the output variable from the PreviewDeploy task
-        $previewUrl = "$(AZURESTATICWEBAPP_STATIC_WEB_APP_URL)"
+        # Access the output variable from the PreviewDeploy task using the correct syntax
+        $previewUrl = "$(PreviewDeploy.AZURESTATICWEBAPP_STATIC_WEB_APP_URL)"
+        
+        if ([string]::IsNullOrEmpty($previewUrl) -or $previewUrl -eq "`$(PreviewDeploy.AZURESTATICWEBAPP_STATIC_WEB_APP_URL)") {
+          Write-Host "##[warning]Preview URL not available. This may happen if the deployment failed or the output variable was not set."
+          Write-Host "##[section]📝 Environment: $(Build.SourceBranchName)"
+          exit 0
+        }
         
         Write-Host "##[section]🚀 Preview Environment Deployed!"
         Write-Host "##[section]🔗 URL: $previewUrl"
