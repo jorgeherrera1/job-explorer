@@ -13,11 +13,5 @@
             "statusCode": 302,
             "redirect": "/.auth/login/aad"
         }
-    },
-    "navigationFallback": {
-        "rewrite": "/index.html",
-        "exclude": [
-            "/.auth/*"
-        ]
     }
 }
