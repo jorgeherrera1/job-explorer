@@ -14,10 +14,15 @@
             "redirect": "/.auth/login/aad"
         }
     },
-    "navigationFallback": {
-        "rewrite": "/index.html",
-        "exclude": [
-            "/.auth/*"
-        ]
+    "auth": {
+        "identityProviders": {
+            "azureActiveDirectory": {
+                "registration": {
+                    "openIdIssuer": "https://login.microsoftonline.com/d7063cf2-afd6-43fc-aa12-1667d97f0885/v2.0",
+                    "clientIdSettingName": "AZURE_CLIENT_ID",
+                    "clientSecretSettingName": "AZURE_CLIENT_SECRET"
+                }
+            }
+        }
     }
 }
