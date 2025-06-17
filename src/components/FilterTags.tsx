@@ -1,6 +1,6 @@
 import React from 'react';
 import { useStore } from '@nanostores/react';
-import { filtersStore, clearFilter, clearAllFilters, toggleGuild, toggleMainSkill, toggleLevel, filteredJobsCountStore } from '../stores/filters';
+import { filtersStore, clearFilter, clearAllFilters, toggleGuild, toggleMainSkill, toggleLevel, filteredJobsCountStore, isJobCodePattern } from '../stores/filters';
 import type { FilterTag, Job } from '../types';
 import XMarkIcon from './icons/XMarkIcon';
 
@@ -19,7 +19,9 @@ const FilterTags: React.FC<FilterTagsProps> = ({ jobs }) => {
   const filterTags: FilterTag[] = [];
   
   if (filters.search) {
-    filterTags.push({ type: 'search', value: filters.search, label: `Search: ${filters.search}` });
+    const isJobCode = isJobCodePattern(filters.search);
+    const labelPrefix = isJobCode ? 'Code' : 'Search';
+    filterTags.push({ type: 'search', value: filters.search, label: `${labelPrefix}: ${filters.search}` });
   }
   
   // Add guild tags
