@@ -5,7 +5,6 @@ trigger:
     include:
       - main
       - develop
-      # Remove feature/* and hotfix/* from triggers
 
 variables:
   - name: isMainBranch
