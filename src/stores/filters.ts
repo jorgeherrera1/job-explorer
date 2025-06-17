@@ -2,6 +2,16 @@ import { atom } from 'nanostores'
 import { computed } from 'nanostores'
 import type { Job } from '../types'
 
+// Job code detection utility
+export function isJobCodePattern(input: string): boolean {
+  const trimmed = input.trim()
+  // A string is considered a potential job code if:
+  // - Length is 5-6 characters
+  // - Contains only uppercase letters and numbers
+  // - Follows the pattern: Letter + 3 alphanumeric + Letter/Number + optional Letter
+  return /^[A-Z][A-Z0-9]{3}[A-Z0-9][A-Z]?$/i.test(trimmed)
+}
+
 export interface FilterState {
   search: string
   guilds: string[]
@@ -94,9 +104,21 @@ export function clearFilter(filterType: keyof FilterState) {
 export const filteredJobsStore = computed(filtersStore, (filters) => {
   return (jobs: Job[]) => {
     return jobs.filter(job => {
-      // Search filter - case-insensitive match on job title
-      if (filters.search && !job.jobTitle.toLowerCase().includes(filters.search.toLowerCase())) {
-        return false
+      // Search filter - case-insensitive match on job title OR job code
+      if (filters.search) {
+        const searchTerm = filters.search.toLowerCase()
+        const titleMatch = job.jobTitle.toLowerCase().includes(searchTerm)
+        
+        // For job code search, compare first 5 characters (excluding country)
+        let codeMatch = false
+        if (isJobCodePattern(filters.search)) {
+          const searchPrefix = filters.search.substring(0, 5).toLowerCase()
+          codeMatch = job.id.toLowerCase() === searchPrefix
+        }
+        
+        if (!titleMatch && !codeMatch) {
+          return false
+        }
       }
 
       // Guild filter - job guild must be in selected guilds (OR within guilds)
