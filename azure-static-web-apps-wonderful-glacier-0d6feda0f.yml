@@ -1,29 +1,21 @@
 name: Job Explorer CICD Pipeline
 
-# Trigger on pushes to main and feature/hotfix branches
 trigger:
   branches:
     include:
       - main
-      - feature/*
-      - hotfix/*
-
-# PR triggers for preview environments
-pr:
-  branches:
-    include:
-      - main
-  autoCancel: true  # Cancel previous PR builds when new commits are pushed
+      - develop
+      # Remove feature/* and hotfix/* from triggers
 
 variables:
-  # Determine if this is the main branch
   - name: isMainBranch
     value: $[eq(variables['Build.SourceBranch'], 'refs/heads/main')]
+  - name: isDevelopBranch
+    value: $[eq(variables['Build.SourceBranch'], 'refs/heads/develop')]
 
 jobs:
 - job: build_and_deploy_job
   displayName: Build and Deploy Job
-  condition: or(eq(variables['Build.Reason'], 'Manual'),or(eq(variables['Build.Reason'], 'PullRequest'),eq(variables['Build.Reason'], 'IndividualCI')))
   pool:
     vmImage: ubuntu-latest
   variables:
@@ -42,16 +34,14 @@ jobs:
       app_location: "/"
       api_location: ""
       output_location: "dist"
-      # No deployment_environment = production deployment
 
-  # Deploy to Preview Environment (feature branches and PRs)
+  # Deploy to Develop Environment (develop branch only)
   - task: AzureStaticWebApp@0
-    displayName: 'Deploy to Preview Environment'
-    name: PreviewDeploy
-    condition: ne(variables.isMainBranch, 'true')
+    displayName: 'Deploy to Develop Environment'
+    condition: eq(variables.isDevelopBranch, 'true')
     inputs:
       azure_static_web_apps_api_token: $(AZURE_STATIC_WEB_APPS_API_TOKEN_WONDERFUL_GLACIER_0D6FEDA0F)
       app_location: "/"
       api_location: ""
       output_location: "dist"
-      deployment_environment: $(Build.SourceBranchName)
+      deployment_environment: "develop"
