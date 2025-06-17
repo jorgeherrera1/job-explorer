@@ -2,6 +2,10 @@
     "trailingSlash": "auto",
     "routes": [
         {
+            "route": "/.auth/login/github",
+            "statusCode": 404
+        },
+        {
             "route": "/*",
             "allowedRoles": [
                 "authenticated"
@@ -14,13 +18,17 @@
             "redirect": "/.auth/login/aad"
         }
     },
+    "globalHeaders": {
+        "X-Company": "Motivus",
+        "X-Application": "Job Explorer"
+    },
     "auth": {
         "identityProviders": {
             "azureActiveDirectory": {
                 "registration": {
                     "openIdIssuer": "https://login.microsoftonline.com/d7063cf2-afd6-43fc-aa12-1667d97f0885/v2.0",
                     "clientIdSettingName": "AZURE_CLIENT_ID",
-                    "clientSecretSettingName": "AZURE_CLIENT_SECRET_APP_SETTING_NAME"
+                    "clientSecretSettingName": "AZURE_CLIENT_SECRET"
                 }
             }
         }
