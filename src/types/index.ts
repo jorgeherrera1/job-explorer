@@ -84,6 +84,14 @@ export type TechnicalSkill = Skill;
 export type FoundationalSkill = Skill;
 
 /**
+ * Experience interface representing a years of experience entry
+ */
+export interface Experience {
+  title: string;
+  content: string[];
+}
+
+/**
  * Job details interface representing detailed job information from the API
  * Contains mission information and responsibilities for a specific language
  */
@@ -92,6 +100,7 @@ export interface JobDetails {
   responsibilities: Responsibility[];
   technicalSkills: TechnicalSkill[];
   foundationalSkills: FoundationalSkill[];
+  experiences: Experience[];
 }
 
 /**

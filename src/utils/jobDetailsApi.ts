@@ -1,4 +1,4 @@
-import type { JobDetails, Responsibility } from '../types/index.js';
+import type { JobDetails, Responsibility, Experience } from '../types/index.js';
 import { getLanguageApiValue, DEFAULT_LANGUAGE } from './languages.js';
 import { transformSkills } from './skillTransforms.js';
 
@@ -54,12 +54,33 @@ export async function fetchJobDetails(
 
     // Parse foundational skills using shared transform function  
     const foundationalSkills = data.foundationalSkills ? transformSkills(data.foundationalSkills) : [];
+
+    // Parse experiences from API response
+    const experiences: Experience[] = [];
+    
+    if (data.experiences && Array.isArray(data.experiences)) {
+      data.experiences.forEach((experienceGroup: any) => {
+        if (experienceGroup.title && experienceGroup.list && Array.isArray(experienceGroup.list)) {
+          const content = experienceGroup.list
+            .map((item: any) => item.content)
+            .filter((content: string) => content && content.trim());
+          
+          if (content.length > 0) {
+            experiences.push({
+              title: experienceGroup.title,
+              content
+            });
+          }
+        }
+      });
+    }
     
     return {
       mission: data.mission,
       responsibilities,
       technicalSkills,
-      foundationalSkills
+      foundationalSkills,
+      experiences
     };
     
   } catch (error) {
