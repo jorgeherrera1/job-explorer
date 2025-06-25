@@ -12,14 +12,14 @@ const { job, jobDetails } = Astro.props;
 // Helper function to get country flags based on country names
 function getCountryFlag(country: string): string {
   const flagMap: Record<string, string> = {
-    'Argentina': '🇦🇷',
-    'Brazil': '🇧🇷',
-    'Costa Rica': '🇨🇷',
-    'Mexico': '🇲🇽',
-    'USA': '🇺🇸'
+    'Argentina': '/icon/ar.svg',
+    'Brazil': '/icon/br.svg',
+    'Costa Rica': '/icon/cr.svg',
+    'Mexico': '/icon/mx.svg',
+    'USA': '/icon/us.svg'
   };
   
-  return flagMap[country] || '🌍';
+  return flagMap[country] || '/icon/job-codes.svg';
 }
 
 // Regional codes based on the job's jobCodes
@@ -93,20 +93,18 @@ const regionalCodes = Object.entries(job.jobCodes).map(([country, code]) => ({
       <!-- Regional codes section moved from header -->
       <div class="mb-6">
         <div class="flex items-center gap-2 mb-3">
-          <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-          </svg>
+          <img src="/icon/job-codes.svg" alt="Job Codes" class="w-6 h-6" />
           <span class="text-sm font-medium text-blue-600">Job Codes</span>
         </div>
         <div class="flex flex-wrap gap-2">
           {regionalCodes.map(({ country, code, flag }) => (
             <button 
-              class="flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-lg border hover:bg-gray-100 transition-colors cursor-pointer regional-code-btn"
+              class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full border border-gray-200 hover:border-gray-300 transition-colors cursor-pointer regional-code-btn shadow-sm"
               data-code={code}
               title={`Click to copy ${code}`}
             >
-              <span class="text-lg">{flag}</span>
-              <span class="text-sm font-medium text-gray-700">{code}</span>
+              <img src={flag} alt={country} class="w-5 h-5 rounded-full" />
+              <span class="text-sm font-semibold text-gray-700">{code}</span>
             </button>
           ))}
         </div>
@@ -114,9 +112,7 @@ const regionalCodes = Object.entries(job.jobCodes).map(([country, code]) => ({
 
       <!-- Job Description section -->
       <div class="flex items-center gap-2 mb-4">
-        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-        </svg>
+        <img src="/icon/job-description.svg" alt="Job Description" class="w-6 h-6" />
         <span class="text-sm font-medium text-blue-600">Job Description</span>
       </div>
       <div class="prose prose-sm max-w-none text-gray-700">
@@ -133,9 +129,7 @@ const regionalCodes = Object.entries(job.jobCodes).map(([country, code]) => ({
       {jobDetails?.experiences && jobDetails.experiences.length > 0 && (
         <div class="mt-6">
           <div class="flex items-center gap-2 mb-4">
-            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-            </svg>
+            <img src="/icon/experience.svg" alt="Experience" class="w-6 h-6" />
             <span class="text-sm font-medium text-blue-600">Experience</span>
           </div>
           <div class="prose prose-sm max-w-none text-gray-700">
@@ -156,7 +150,7 @@ const regionalCodes = Object.entries(job.jobCodes).map(([country, code]) => ({
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {jobDetails.responsibilities.map(resp => (
             <div class="flex items-start gap-4">
-              <span class="text-xl flex-shrink-0">📌</span>
+              <img src="/icon/responsibility.svg" alt="Responsibility" class="w-6 h-6" />
               <div class="min-w-0 flex-1">
                 <h4 class="font-medium text-gray-900">{resp.responsibilityArea}</h4>
                 <p class="text-gray-700 text-sm">{resp.responsibilityDescription}</p>
