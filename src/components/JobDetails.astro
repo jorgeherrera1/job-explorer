@@ -33,28 +33,22 @@ const regionalCodes = Object.entries(job.jobCodes).map(([country, code]) => ({
 <div class="h-full flex flex-col" transition:name="job-details">
   <!-- Job Header -->
   <div class="bg-white p-6 border-b border-gray-200">
-    <div class="mb-6">
-      <div class="text-sm text-gray-600 mb-1">Job Position</div>
-      <h1 class="text-2xl font-bold text-gray-900" transition:name={`job-title-${job.id}`}>{job.jobTitle}</h1>
-    </div>
-    
-    <!-- Grid with vertical separators -->
-    <div class="grid grid-cols-3 gap-6 mb-6 relative" transition:name={`job-info-${job.id}`}>
+    <!-- Single row with 4 columns, no separators -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6" transition:name={`job-info-${job.id}`}>
+      <div>
+        <div class="text-sm text-gray-600 mb-1">Job Position</div>
+        <div class="font-bold text-gray-900" transition:name={`job-title-${job.id}`}>{job.jobTitle}</div>
+      </div>
+      
       <div>
         <div class="text-sm text-gray-600 mb-1">Main Skill</div>
         <div class="font-semibold text-gray-900">{job.mainSkill}</div>
       </div>
       
-      <!-- Vertical separator -->
-      <div class="absolute left-1/3 top-0 bottom-0 w-px bg-gray-200"></div>
-      
       <div>
         <div class="text-sm text-gray-600 mb-1">Level</div>
         <div class="font-semibold text-gray-900">{job.level.code}-{job.level.name}</div>
       </div>
-      
-      <!-- Vertical separator -->
-      <div class="absolute left-2/3 top-0 bottom-0 w-px bg-gray-200"></div>
       
       <div>
         <div class="text-sm text-gray-600 mb-1">Guild</div>
@@ -62,27 +56,6 @@ const regionalCodes = Object.entries(job.jobCodes).map(([country, code]) => ({
       </div>
     </div>
 
-    <!-- Regional Codes -->
-    <div class="mb-6" transition:name={`regional-codes-${job.id}`}>
-      <div class="flex items-center gap-2 mb-3">
-        <svg class="w-5 h-5 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
-        <span class="text-sm font-medium text-teal-600">Job Codes</span>
-      </div>
-      <div class="flex flex-wrap gap-2">
-        {regionalCodes.map(({ country, code, flag }) => (
-          <button 
-            class="flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-lg border hover:bg-gray-100 transition-colors cursor-pointer regional-code-btn"
-            data-code={code}
-            title={`Click to copy ${code}`}
-          >
-            <span class="text-lg">{flag}</span>
-            <span class="text-sm font-medium text-gray-700">{code}</span>
-          </button>
-        ))}
-      </div>
-    </div>
 
     <!-- Tabs - Center aligned -->
     <div class="flex justify-center border-gray-200" transition:name="job-tabs">
@@ -117,6 +90,29 @@ const regionalCodes = Object.entries(job.jobCodes).map(([country, code]) => ({
   <div class="flex-1 overflow-y-auto p-6" transition:name={`job-content-${job.id}`}>
     <!-- General Tab -->
     <div id="general-tab" class="tab-content">
+      <!-- Regional codes section moved from header -->
+      <div class="mb-6">
+        <div class="flex items-center gap-2 mb-3">
+          <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+          </svg>
+          <span class="text-sm font-medium text-blue-600">Job Codes</span>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          {regionalCodes.map(({ country, code, flag }) => (
+            <button 
+              class="flex items-center gap-2 bg-gray-50 px-3 py-2 rounded-lg border hover:bg-gray-100 transition-colors cursor-pointer regional-code-btn"
+              data-code={code}
+              title={`Click to copy ${code}`}
+            >
+              <span class="text-lg">{flag}</span>
+              <span class="text-sm font-medium text-gray-700">{code}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <!-- Job Description section -->
       <div class="flex items-center gap-2 mb-4">
         <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
